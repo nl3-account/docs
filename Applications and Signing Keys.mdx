@@ -1,0 +1,24 @@
+---
+title: 'Applications and Signing Keys'
+description: 'Application set up and Key management'
+---
+##Protecting Applications
+The video below is a step by step walkthrough for setting up an application in the company portal. This process will require domain validation from an authoritative DNS server using a CNAME which will generate a sign in key that will be used to sign the JSON web tokens that are required to check lock statuses for users:
+
+Adding an application to the portal will allow for Identity Provider Integrations that use Next Level3's lock status checking.
+
+<video
+  controls
+  className="w-full aspect-video"
+  src="https://company.nextlevel3.com/videos/NewApplication&SigningKey.mp4"
+></video>
+_*Please wait atleast 30 minutes before attempting to validate your application, results may vary, depending on your DNS hostname provider it could take longer to propagate_
+
+###Step 3. Setting up your Company Portal Identity Provider Integrations
+The next step in setting up applications to check lock statuses is to implement Identity Provider Integrations.
+
+<Card title="Identity Provider Integrations" href="/Integrations">
+    Integrating Identity Service Providers and Next Level3 Native languages
+</Card>
+
+
