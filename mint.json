@@ -30,11 +30,11 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["Introduction", "Desktop User Guide", "Mobile User Guide"]
     },
     {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
+      "group": "Features",
+      "pages": ["Features/Applications and Signing Keys", "Features/Integrations", "Features/Users, Groups, and Endpoints", "Features/Cyber Policies and Activity Logs"]
     },
     {
       "group": "API Documentation",
