@@ -28,12 +28,12 @@ description: 'Identity Service Providers and Native languages'
             The first step to add an NL3 Account Protection Check to an existing application using Auth0 for authentication is to add a custom action which will then be added to your existing login flow.
           ### Adding an Auth0 Custom Action
             a. After logging into the Auth0 management portal, navigate to ‘Actions -> Library’ from the main menu and click the “Build Custom” button to build a custom action.
-            <img src="/images/auth0/auth0 pic 1.png">
+            <img src="/images/auth0/auth0 pic 1.png" />
             b. Enter the following Information (replacing myApplication with the name of your application) in the Custom Action form and click Create.
               * Name – myApplication Account Protection Check
               * Trigger – Login/Post Login
               * Runtime – Node 16 (Recommended)
-            <img src="/images/auth0/auth0 pic 2.png">
+            <img src="/images/auth0/auth0 pic 2.png" />
             c. In the code editor for the action, remove all the existing default code and replace it with the following NL3 Action code.
             ```javascript
             const https = require('https');
@@ -111,19 +111,19 @@ description: 'Identity Service Providers and Native languages'
             };
             ```
           Once you have updated the code, click “Save Draft”. After doing this, your action code should look like the following:
-          <img src="/images/auth0/auth0 pic 3.png">
+          <img src="/images/auth0/auth0 pic 3.png" />
           d. Now you need to set up some secrets for the new custom action in order to configure it for your Auth0 protected application. This includes a secret for your NL3 signing key so that the action can check the lock status of users that are set up for Account Protection. You can retrieve your signing key from the Next Level3 Company Portal (https://company.nextlevel3.com) after you have added the application to the company portal and validated the associated domain for that application. 
 
           To update secrets, click the ‘Key’ Icon to the left of the code editor called secrets and select the “Add Secret” button   
           
-          <img src="/images/auth0/auth0 pic 4.png">
+          <img src="/images/auth0/auth0 pic 4.png" />
 
           e. Enter to following secret key/value pairs one at a time in the ‘Define Secret’ form and click “Create”.
 
             - Key = LOCKED_MESSAGE
             - Value = Add a non-descript error message of your choosing such as ‘Login Failed’
 
-            <img src="/images/auth0/auth0 pic 5.png".
+            <img src="/images/auth0/auth0 pic 5.png" />
 
             - Key = SIGNING_KEY
             - Value = Paste your domain key provided by the Next Level3 company portal for the domain.
@@ -140,20 +140,20 @@ description: 'Identity Service Providers and Native languages'
             - Key APP_URI
             - Value = This must match the value of the Domain URL you configured in the NL3 company portal (e.g. myapp.domain.com)
           f. Next click the package icon labeled “Modules” to add some additional npm modules to the action. The only dependency that is not included by default is “njwt”. Click the ‘Add Dependency’ button, then enter “njwt” into the “Name” field and click the “Create” button. 
-            <img src="/images/auth0/auth0 pic 6.png">
+            <img src="/images/auth0/auth0 pic 6.png" />
           g. Next, click “Save Draft” from the code editor window to save the action.
             <img src="/images/auth0/auth0 pic 7.png">
           h. Click “Deploy” from the code editor window to deploy the action. After you click “Deploy”, a slider popup will appear letting you know that the action was successfully deployed.
 
           i. Click “Add to Flow” from that slider pop-up.
             *_if you missed the popup slider,  you can also navigate to “Actions -> Flows” and select the Login tile._
-            <img src="/images/auth0/auth0 pic 8.png">
+            <img src="/images/auth0/auth0 pic 8.png" />
           j. Click the “Custom” tab to list your custom actions. You should see the NL3 Account Protection action you just created in the list.
-            <img src="/images/auth0/auth0 pic 9.png">
+            <img src="/images/auth0/auth0 pic 9.png" />
           k. Drag and drop the NL3 Account Protection action into the flow.
 
           Your login flow should look similar to this now.
-          <img src="/images/auth0/auth0 pic 10.png">
+          <img src="/images/auth0/auth0 pic 10.png" />
           l. Click “Apply” to apply the flow changes.
 
           That’s it. You have now enabled Next Level3 Account Protection. After completing the second phase of integration (User Enablement) and enabling users,  you will be able to test out the lock/unlock capabilities in your site for users that have enabled their accounts for protection.
@@ -168,7 +168,7 @@ description: 'Identity Service Providers and Native languages'
       </Tab>
       <Tab title="Microsoft Azure AD B2C">
         ## Microsoft Azure AD B2C Integration
-        <img src="/images/microsoft b2c/azure1.png">
+        <img src="/images/microsoft b2c/azure1.png" />
         The Next Level3 Azure AD B2C integration is designed to be used for any of your existing applications or sites which are using Azure AD for authentication. This integration will allow you to add Account Protection for any application which leverages Azure AD B2C for authentication. 
 
         Pre-requisites
@@ -225,7 +225,7 @@ description: 'Identity Service Providers and Native languages'
       </Tab>
       <Tab title="Microsoft Azure AD and O365">
         ## Microsoft Azure AD and O365 Integration
-        <img src="/images/microsoft b2c/azure1.png">
+        <img src="/images/microsoft b2c/azure1.png" />
         This section will walk you through the required setup and configuration steps needed to enable the Next Level3 Cloud Identity solution in a Microsoft online environment. These steps include setting up and configuring a Microsoft AD FS Farm (if one does not already exist), setting up and configuring the Next Level3 Cloud Identity Account Protection Check by using a Microsoft AD FS Risk Assessment Model Plugin. If you have already federated your Microsoft Online services with AD FS, skip the pre-requisites and go directly to the plugin installation and setup.
 
         Pre-requisites
@@ -542,7 +542,7 @@ description: 'Identity Service Providers and Native languages'
         https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html
       </Tab>
       <Tab title="AWS Cognito">
-        <img src="/images/aws cognito/cognito1.png">
+        <img src="/images/aws cognito/cognito1.png" />
         ## AWS Cognito Integration
         The Next Level3 AWS Cognito integration is designed to be used for your existing applications or sites that are using AWS Cognito for authentication. This integration will allow you to easily add Account Protection to any application that leverages AWS Cognito for authentication.
 
@@ -604,7 +604,7 @@ description: 'Identity Service Providers and Native languages'
             return event
         ```
         The next step is to configure the Amazon Cognito User Pool to call this Lambda function as a “Pre authentication” trigger by clicking on the User Pool and then selecting “Triggers” under “General Settings” in the side menu. Then, you will select the function you created in the drop-down box under “Pre authenticaiton” as follows:
-        <img src="/images/aws cognito/cognito0.png">
+        <img src="/images/aws cognito/cognito0.png" />
         _*If you use IAM Roles and not IAM Users, please contact support to discuss the options for implementation and specific design considerations that may be required to implement this correctly using roles._
 
         The next step is to setup the Amazon EventBridge event rule that triggers the Lambda function for specific events. Here is a sample rule:
@@ -614,7 +614,7 @@ description: 'Identity Service Providers and Native languages'
         https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html
       </Tab>
       <Tab title="AWS IAM">
-        <img src="/images/awsiam/awsiam.png">
+        <img src="/images/awsiam/awsiam.png" />
         ## AWS IAM Integration
         The Next Level3 AWS IAM integration is designed to be used for your existing applications or sites that are using AWS IAM for authentication. This integration will allow you to easily add Account Protection to any application that leverages AWS IAM for authentication. 
 
@@ -793,7 +793,7 @@ description: 'Identity Service Providers and Native languages'
 
     <Tabs>
       <Tab title="Node JS">
-        <img src="/images/nodejs/nodejs.png">
+        <img src="/images/nodejs/nodejs.png" />
         The Next Level3 Node.js integration is designed to be used for your existing applications or sites that are using native Node.js code for authentication. This integration will allow you to easily add Account Protection to any application that leverages Node.js for authentication. 
         Pre-requisites
           * Node.js Application
@@ -896,7 +896,7 @@ description: 'Identity Service Providers and Native languages'
         ```
       </Tab>
       <Tab title="Python">
-        <img src="/images/python/python.png">
+        <img src="/images/python/python.png" />
         ## Python Integration
         The Next Level3 Python integration is designed to be used for your existing applications or sites that are using Python for authentication. This integration will allow you to easily add Account Protection to any application that leverages Python for authentication. 
         Pre-requisites
