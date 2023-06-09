@@ -3,7 +3,7 @@ title: 'Users, Groups, and Endpoints'
 description: 'User, group, and endpoint management'
 ---
 
-##User Management
+## User Management
 All registered users are manageed from the Company Portal from the "Users" tab.
 
 [User](/images/User Management/User1.png)
@@ -16,29 +16,29 @@ When a user is unable to access their account through any of their authorized de
 
 The "Actions" button in the top right corner, allows administrators to add users and view previous user imports.
 
-###Actions Menu
+### Actions Menu
 [User](/images/User Management/User3.png)
 
 After a user has been added they will have the following account set up options:
 
 <CardGroup>
-    </Card title="Web Browser" 
-    href="https://company.nextlevel3.com" 
-    icon="fa-sharp fa-regular fa-mobile">
+    </Card title="Desktop Browser" 
+    href="/Desktop User Guide.mdx" 
+    icon="/icons/desktop-solid">
     Signing into the Company Portal using a web browser.
     </Card>
     </Card title="Mobile Device Application"
-    href="/MobileDocs.mdx"
-    icon="fa-duotone fa-browser">
+    href="/Mobile User Guide.mdx"
+    icon="/icons/mobile-screen-button-solid">
     Signing into the company portal using the Next Level3 Mobile app.
     </Card>
 </CardGroup>
 
-##Enabling Users
-###User Enablement
+## Enabling Users
+### User Enablement
 Next Level3 Supports two methods for enabling users, the opt in method and the automatic enrollment method.
 
-###Opt In Method
+### Opt In Method
 If you wish to allow users to self service opt in and enable Next Level3 protection for their accounts you must provide the users with a link 
 
  
@@ -55,11 +55,11 @@ The User Enablement process is fairly simple. Somewhere in your application, you
 {"iss":"www.myapplication.com","iat":1642525200,"exp":1674061200,"aud":"auth.nextlevel3.com","sub":"myuser@myapplication.com"}
 ```
 
-###Step 2 - Add Redirect to Next LEVEL3
+### Step 2 - Add Redirect to Next LEVEL3
 
 The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter (e.g. https://cloud.nextlevel3.com?auth-token=<JWT created in Step 1>). Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
 
-##Group Management
+## Group Management
 Groups are managed and created in the Group Manager pane:
 
 [Group](/images/Group Management/Group1.png)
@@ -78,16 +78,16 @@ Once the administrator is finished, clicking the "Save" option will save the cha
 
 Clicking the "Return" option will cancel any pre-saving changes made to the group and will bring you back to the Group management pane.
 
-###Example of Group Creation/Management
+### Example of Group Creation/Management
 
 [Group](/images/Group Management/Group3.png)
 
-##Protecting Endpoints
+## Protecting Endpoints
 <Tabs>
-    <Tab icon={windows.svg} title="Windows">
-##Windows
+    <Tab icon="/icons/windows.svg" title="Windows">
+## Windows
 
-###Prerequisites
+### Prerequisites
 
 You will need:
 
@@ -95,7 +95,7 @@ You will need:
     * Access as ‘administrator’ on the system that the module will be installed on
     * Users available for testing.
 
-###Standard Installation
+### Standard Installation
     
     1. Log into your NextLevel3 portal at https://company.nextlevel3.com/
     2. Navigate to Applications and choose the appropriate application (in this case jump-servers).
@@ -115,22 +115,22 @@ You will need:
     [pam](/images/pam/pam6.png)
     11. Confirm that you and other users can log in, especially that the appropriate connectivity and usernames are in place.
 
-###Removal
+### Removal
 
     The module consists of Item’s and ItemProperty’s that were created during the NextLevel3 installation. You will need to run the following command to remove the module from your device.
     [pam](/images/pam/pam7.png)
 
     After running the above commands you will need to restart your device for the changes to take place.
 
-    ###Additional Configuration
+    ### Additional Configuration
 
     The following command can be entered to give designated users NextLevel3 MFA bypass privileges:
     [pam](/images/pam/pam8.png)
     </Tab>
-    <Tab icon={linux.svg} title="Linux">
-##Linux
+    <Tab icon="/icons/linux.svg" title="Linux">
+## Linux
 
-###Prerequisites
+### Prerequisites
 
 You will need:
 
@@ -138,7 +138,7 @@ You will need:
     * Access as ‘root’ (directly or via su/sudo) on the system that the module will be installed on.
     * Users available for testing.
 
-###Standard Installation
+### Standard Installation
 
     1. Log into your NextLevel3 portal at https://company.nextlevel3.com/
     2. Navigate to Applications and choose the appropriate application (in this case jump-servers).
@@ -162,7 +162,7 @@ You will need:
     [pam](images/pam/pam6.png)
     12. Confirm that you and other users can log in, especially that the appropriate connectivity and usernames are in place.
 
-###Removal
+### Removal
 
     The module consists of two files and an entry in the pam configuration. To remove it temporarily, simply remove all references to it in pam.d
     [pam](images/pam/linux/pam6.png)
@@ -176,7 +176,7 @@ You will need:
         - SuSE: /usr/lib64/security
         - Ubuntu: /lib/x86_64-linux-gnu/security
 
-###Additional Configuration
+### Additional Configuration
 
     There are three additional settings that you can change by editing the configuration file. By default this is installed as /etc/nextlevel3.json. The file created by the sample installation is below:
     [pam](images/pam/linux/pam7.png)
@@ -194,16 +194,16 @@ You will need:
     "GroupTry": [ "wheel", "staff" ]
     ```
     </Tab>
-    <Tab icon={apple.svg} title="MacOS">
-    ##Apple... Coming soon...
+    <Tab icon="/icons/apple.svg" title="MacOS">
+    ## Apple... Coming soon!
     </Tab>
 </Tabs
 
-##Step 5. Monitoring Activity and Managing Cyber Policies
+## Step 5. Monitoring Activity and Managing Cyber Policies
 
 Once you have set up your integrations, the next step is utilizing the Activity Log and Cyber Policy features.
 
-<Card title="Activity Logs and Cyber Policies" href="/ALP.mdx">
+<Card title="Activity Logs and Cyber Policies" href="/Cyber Policies and Activity Logs.mdx">
   Monitoring Activity and Managing Policies
 </Card>
 
