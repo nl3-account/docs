@@ -6,18 +6,18 @@ description: 'User, group, and endpoint management'
 ## User Management
 All registered users are manageed from the Company Portal from the "Users" tab.
 
-[User](/images/User Management/User1.png)
+<img src="/images/User Management/User1.png">
 
 Here, the administrator can enable/disable account protection for associated applications and enable/disable administrative access to the Company Portal. 
 
 When a user is unable to access their account through any of their authorized devices and they have lost their recovery key the administrator can utilize the reset account function.
 
-[User](/images/User Management/User2.png)
+<img src="/images/User Management/User2.png">
 
 The "Actions" button in the top right corner, allows administrators to add users and view previous user imports.
 
 ### Actions Menu
-[User](/images/User Management/User3.png)
+<img src="/images/User Management/User3.png">
 
 After a user has been added they will have the following account set up options:
 
@@ -62,11 +62,11 @@ The next step is to add an NL3 User Enablement workflow in your application. Thi
 ## Group Management
 Groups are managed and created in the Group Manager pane:
 
-[Group](/images/Group Management/Group1.png)
+<img src="/images/Group Management/Group1.png">
 
 Groups are added by selecting the **"+ New Group"** icon in the top right-hand corner of the pane. Selecting this option will bring up the "New Group" creation page where the user can add the name and description of the group:
 
-[Group](/images/Group Management/Group2.png)
+<img src="/images/Group Management/Group2.png">
 
 Once a group has been created the user can then manage the users in the group by selecting the icon or delete the group by selecting the trashcan icon in the "ACTION" column. 
 
@@ -80,7 +80,7 @@ Clicking the "Return" option will cancel any pre-saving changes made to the grou
 
 ### Example of Group Creation/Management
 
-[Group](/images/Group Management/Group3.png)
+<img src="/images/Group Management/Group3.png">
 
 ## Protecting Endpoints
 <Tabs>
@@ -100,32 +100,32 @@ You will need:
     1. Log into your NextLevel3 portal at https://company.nextlevel3.com/
     2. Navigate to Applications and choose the appropriate application (in this case jump-servers).
     3. Copy the application URL (in this case jump-servers.infra.company.com) somewhere you can retrieve it.
-    [pam](/images/pam/pam1.png)
+    <img src="/images/pam/pam1.png">
     4. Next, navigate to Keys & Tokens, select the Application from step 2 and Key Type “Application Signing Keys”, then click on the Key to retrieve the Application Signing Key.
-    [pam](/images/pam/pam2.png)
+    <img src="/images/pam/pam2.png">
     5. Copy the signing key (it may be multiple lines), and store it with the URL from earlier.
-    [pam](/images/pam/pam3.png)
+    <img src="/images/pam/pam3.png">
     6. Download the installer from the company portal on the Windows user account you are protecting.
     7. Copy the file to the following directory: C:\Windows\System32
     8. Run the following Windows Powershell commands to create the LSA Registry entries to install sub authentication module, configure event logging, and create registry entries for sub authentication module connection to NextLevel3:
-    [pam](/images/pam/pam4.png)
+    <img src="/images/pam/pam4.png">
     9. Depending on the endpoint application you are configuring, you will need to add the API Key, API URI, and APP URI to the registry using the following commands:
-    [pam](/images/pam/pam5.png)
+    <img src="/images/pam/pam5.png">
     10. Restart your device, this will install the module and its configuration. This will require your account to use NextLevel3 MFA, and, if the NextLevel3 server cannot be contacted, will be denied access.
-    [pam](/images/pam/pam6.png)
+    <img src="/images/pam/pam6.png">
     11. Confirm that you and other users can log in, especially that the appropriate connectivity and usernames are in place.
 
 ### Removal
 
     The module consists of Item’s and ItemProperty’s that were created during the NextLevel3 installation. You will need to run the following command to remove the module from your device.
-    [pam](/images/pam/pam7.png)
+    <img src="/images/pam/pam7.png">
 
     After running the above commands you will need to restart your device for the changes to take place.
 
     ### Additional Configuration
 
     The following command can be entered to give designated users NextLevel3 MFA bypass privileges:
-    [pam](/images/pam/pam8.png)
+    <img src="/images/pam/pam8.png">
     </Tab>
     <Tab icon="/icons/linux.svg" title="Linux">
 ## Linux
@@ -143,29 +143,29 @@ You will need:
     1. Log into your NextLevel3 portal at https://company.nextlevel3.com/
     2. Navigate to Applications and choose the appropriate application (in this case jump-servers).
     3. Copy the application URL (in this case jump-servers.infra.company.com) somewhere you can retrieve it.
-    [pam](/images/pam/pam1.png)
+    <img src="/images/pam/pam1.png">
     4. Next, navigate to Keys & Tokens, select the Application from step 2 and Key Type “Application Signing Keys”, then click on the Key to retrieve the Application Signing Key.
-    [pam](/images/pam/pam2.png)
+    <img src="/images/pam/pam2.png">
     5. Copy the signing key (it may be multiple lines), and store it with the URL from earlier.
-    [pam](/images/pam/pam3.png)
+    <img src="/images/pam/pam3.png">
     6. Download the installer, and copy it to the system you want to install it on.
-    [pam](images/pam/linux/pam1.png)
+    <img src="images/pam/linux/pam1.png">
     7. Become the root user and extract the installer to the designated folder.
-    [pam](images/pam/linux/pam2.png)
+    <img src="images/pam/linux/pam2.png">
     8. Run the installer, it will ask you for the information stored earlier.
-    [pam](images/pam/linux/pam3.png)
+    <img src="images/pam/linux/pam3.png">
     9. Next the installer shows the changes to add nextlevel3 to the PAM configuration. If you are happy with these changes, type ‘y’ and press enter.
-    [pam](images/pam/linux/pam4.png)
+    <img src="images/pam/linux/pam4.png">
     10. The installer will then install the module and its configuration.
-    [pam](images/pam/linux/pam5.png)
+    <img src="images/pam/linux/pam5.png">
     11. This will install the module with the defaults: all accounts and groups will require NextLevel3 MFA, and, if the NextLevel3 server cannot be contacted, will be denied access.
-    [pam](images/pam/pam6.png)
+    <img src="images/pam/pam6.png">
     12. Confirm that you and other users can log in, especially that the appropriate connectivity and usernames are in place.
 
 ### Removal
 
     The module consists of two files and an entry in the pam configuration. To remove it temporarily, simply remove all references to it in pam.d
-    [pam](images/pam/linux/pam6.png)
+    <img src="images/pam/linux/pam6.png">
     
     This shows that there is a line in /etc/pam.d/base-auth that needs to be removed.
 
@@ -179,7 +179,7 @@ You will need:
 ### Additional Configuration
 
     There are three additional settings that you can change by editing the configuration file. By default this is installed as /etc/nextlevel3.json. The file created by the sample installation is below:
-    [pam](images/pam/linux/pam7.png)
+    <img src="images/pam/linux/pam7.png">
 
     The APIKey and APPURI values were filled in by the installer. Settings that you can change are:
 
