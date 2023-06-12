@@ -1,0 +1,70 @@
+<img src="/images/aws cognito/cognito1.png" />
+## AWS Cognito Integration
+The Next Level3 AWS Cognito integration is designed to be used for your existing applications or sites that are using AWS Cognito for authentication. This integration will allow you to easily add Account Protection to any application that leverages AWS Cognito for authentication.
+
+Pre-requisites
+  * Application Authenticated via Amazon Cognito User Pools
+  * Next Level3 Company Account
+  * Signing Key created for an application in the Next Level3 Company Portal
+### Account Protection
+The first step to add an NL3 Account Protection Check to an existing application that uses Amazon Cognito User Pools for authentication is to create a Lambda function that performs the lock check. Here is some sample Python code:
+```Python
+import json
+import os
+import requests
+import base64
+import logging
+from datetime import datetime
+import jwt
+
+def getLockStatus(token, api_uri, api_path, validationData):
+  responseDict = {}
+  try:
+    headers_dict = {"x-nl3-authorization-token": token, "Content-Type": "application/json"}
+    data_dict = {
+      "userIP": validationData["ip"],
+      "userDevice": validationData["device"],
+      "userLocation": validationData["location"],
+      "integrationType": "cognito",
+      "integrationData": json.loads(validationData["additionalData"])
+    }
+    response = requests.post("".join([api_uri,api_path]), headers=headers_dict, json=data_dict)
+    responseDict = response.json()
+  except Exception as e:
+    responseDict = { "message": str(e) }
+
+  return responseDict
+
+def lambda_handler(event, context):
+  if event["callerContext"]["clientId"] == os.environ["CLIENT_ID"]:
+    username = event["userName"]
+    claims = {
+      "iss": os.environ["APP_URI"],
+      "iat": (datetime.utcnow().timestamp() + (-1 * 60)),
+      "exp": (datetime.utcnow().timestamp() + (5 * 60)),
+      "aud": os.environ["API_URI"],
+      "sub": username
+    }
+    ### Ildeally the Signing Key would be stored and retrieved from a secrets manager
+    ### and not an environmental variable
+    decodedDomainToken = base64.b64decode(os.environ["SIGNING_KEY"])
+    token = jwt.encode(
+      payload=claims,
+      key=decodedDomainToken
+    )
+    response = getLockStatus(token, os.environ["API_URI"], os.environ["API_PATH"], event["request"]["validationData"])
+    if response.get("locked", False):
+      raise Exception(os.environ["LOCKED_MESSAGE"])
+
+    # Return to Amazon Cognito
+    return event
+```
+The next step is to configure the Amazon Cognito User Pool to call this Lambda function as a “Pre authentication” trigger by clicking on the User Pool and then selecting “Triggers” under “General Settings” in the side menu. Then, you will select the function you created in the drop-down box under “Pre authenticaiton” as follows:
+<img src="/images/aws cognito/cognito0.png" />
+_*If you use IAM Roles and not IAM Users, please contact support to discuss the options for implementation and specific design considerations that may be required to implement this correctly using roles._
+
+The next step is to setup the Amazon EventBridge event rule that triggers the Lambda function for specific events. Here is a sample rule:
+
+References:
+
+https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html
