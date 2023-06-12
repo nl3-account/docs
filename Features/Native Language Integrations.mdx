@@ -10,13 +10,14 @@ description: 'Node JS, Python, Microsoft .NET Framework'
       <Accordion title="Node JS">
         <img src="/images/nodejs/nodejs.png" />
         The Next Level3 Node.js integration is designed to be used for your existing applications or sites that are using native Node.js code for authentication. This integration will allow you to easily add Account Protection to any application that leverages Node.js for authentication. 
+        
         Pre-requisites
           * Node.js Application
           * Next Level3 Company Account
           * Signing Key created for an application in the Next Level3 Company Portal
 
         The following Node.js code sample can be used to integrate an account protection check into your existing authentication flow for custom Node.js applications that are handling authentication within the application or where a third-party identity provider does not have a supported integration:
-        ```
+```javascript
         const https = require("https");
         const nJwt = require("njwt");
 
@@ -108,18 +109,20 @@ description: 'Node JS, Python, Microsoft .NET Framework'
             // Code to allow login
           }
         };
-        ```
+```
       </Accordion>
       <Accordion title="Python">
         <img src="/images/python/python.png" />
         ## Python Integration
         The Next Level3 Python integration is designed to be used for your existing applications or sites that are using Python for authentication. This integration will allow you to easily add Account Protection to any application that leverages Python for authentication. 
+        
         Pre-requisites
           * Python Application
           * Next Level3 Company Account
           * Signing Key created for an application in the Next Level3 Company Portal
           * The following Python code sample can be used to integrate an account protection check into your existing authentication flow for custom Python applications that are handling authentication within the application or where a third-party identity provider does not have a supported integration:
-        ```Python
+
+```Python
         import json
         import os
         import requests
@@ -154,8 +157,8 @@ description: 'Node JS, Python, Microsoft .NET Framework'
             "aud": os.environ["API_URI"],
             "sub": userName
           }
-          ### Ildeally the Signing Key would be stored and retrieved from a secrets manager
-          ### and not an environmental variable
+          ## Ildeally the Signing Key would be stored and retrieved from a secrets manager
+          ## and not an environmental variable
           decodedDomainToken = base64.b64decode(os.environ["SIGNING_KEY"])
           token = jwt.encode(
             payload=claims,
@@ -163,10 +166,10 @@ description: 'Node JS, Python, Microsoft .NET Framework'
           )
           response = getLockStatus(token, os.environ["API_URI"], os.environ["API_PATH"], validationData)
           if response.get("locked", False):
-            // Code for prohibiting login and returning generic error message
+          ### Code for prohibiting login and returning generic error message
 
-          // Code for unlocked or unprotected accounts
-        ```
+          ### Code for unlocked or unprotected accounts 
+```
       </Accordion>
       <Accordion title="Microsoft .NET Framework">
         <img src="/images/net/net.jpg">
@@ -174,7 +177,7 @@ description: 'Node JS, Python, Microsoft .NET Framework'
         The following example shows how it’s possible to perform a PreAuthentication Check with Next Level3 to determine lock status and initiate MFA Push based unlocking. If the status is locked, then a push unlock request is sent to the user’s registered devices.
 
         This code can be used in any application prior to authentication with Active Directory or another IDP.
-        ```
+```VisualBasic
         using Microsoft.VisualBasic.FileIO;
         using System;
         using System.IO;
@@ -327,7 +330,7 @@ description: 'Node JS, Python, Microsoft .NET Framework'
                 }
             }
         }
-        ```
+```
       </Accordion>
     </AccordionGroup>
 
