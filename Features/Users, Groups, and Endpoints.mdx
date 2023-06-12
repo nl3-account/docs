@@ -24,12 +24,12 @@ After a user has been added they will have the following account set up options:
 <CardGroup>
     <Card title="Desktop Browser" 
     href="/Desktop User Guide" 
-    icon="/icons/desktop-solid">
+    icon="https://fontawesome.com/icons/desktop?f=classic&s=solid">
     Signing into the Company Portal using a web browser.
     </Card>
     <Card title="Mobile Device Application"
     href="/Mobile User Guide"
-    icon="/icons/mobile-screen-button-solid">
+    icon="https://fontawesome.com/icons/mobile-screen-button?f=classic&s=solid">
     Signing into the company portal using the Next Level3 Mobile app.
     </Card>
 </CardGroup>
@@ -57,24 +57,24 @@ The User Enablement process is fairly simple. Somewhere in your application, you
 
 ### Step 2 - Add Redirect to Next LEVEL3
 
-The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter \e.g. \https://cloud.nextlevel3.com?auth-token=\*JWT*/ created in Step 1. Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
+The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter e.g. https://cloud.nextlevel3.com?auth-token=\*JWT*/ created in Step 1. Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
 
 ## Group Management
 Groups are managed and created in the Group Manager pane:
 
 <img src="/images/Group Management/Group1.png" />
 
-Groups are added by selecting the **"+ New Group"** icon in the top right-hand corner of the pane. Selecting this option will bring up the "New Group" creation page where the user can add the name and description of the group:
+Groups are added by selecting the **"+ New Group"** button in the top right-hand corner of the pane. Selecting this option will bring up the "New Group" creation page where the user can add the name and description of the group:
 
 <img src="/images/Group Management/Group2.png" />
 
-Once a group has been created the user can then manage the users in the group by selecting the icon or delete the group by selecting the trashcan icon in the "ACTION" column. 
+Once a group has been created the user can then manage the users in the group by selecting the pencil icon or delete the group by selecting the trashcan icon in the "ACTION" column. 
 
 Clicking the pencil icon in the action column will bring up the "Edit Group" page where the administrator can select group members by either searching for the user in the search box or using the list of users and then clicking the "\>" to add the user to the group. 
 
 Also, the administrator can choose to add all users in the list by selecting the "\>\>" button. 
 
-Once the administrator is finished, clicking the "Save" option will save the changes made. 
+Once the administrator is finished, clicking the "Save" button will save the changes made. 
 
 Clicking the "Return" option will cancel any pre-saving changes made to the group and will bring you back to the Group management pane.
 
@@ -196,6 +196,7 @@ You will need:
     </Accordion>
     <Accordion title="MacOS" icon="/icons/apple">
     ## Apple... Coming soon!
+    
     </Accordion>
 </AccordionGroup>
 
