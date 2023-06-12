@@ -34,7 +34,7 @@
     },
     {
       "group": "Management",
-      "pages": ["Features/Applications and Signing Keys", "Features/Identity Service Provider Integrations", "Features/Users, Groups, and Endpoints", "Features/Cyber Policies and Activity Logs", "Features/Native Language Integrations"]
+      "pages": ["Features/Applications and Signing Keys", "Features/Identity Service Provider Integrations", "Features/Native Language Integrations", "Features/Users, Groups, and Endpoints", "Features/Cyber Policies and Activity Logs"]
     },
     {
       "group": "API Documentation",
