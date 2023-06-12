@@ -21,10 +21,13 @@ description: 'Auth0, Microsoft Azure, AWS Cognito, and AWS IAM'
 <img src="/images/auth0/auth0.png" />
 ## Auth0 Integration
 The Next Level3 Auth0 integration is designed to be used for any of your existing applications or sites which are using Auth0 for authentication. This integration will allow you to easily add Account Protection to any application that leverages Auth0 for authentication.
+
 **Pre-requisites**
+
 * Auth0 Application
 * Next Level3 Company Account
 * Signing Key created for an application in the Next Level3 Company Portal
+
 ### Adding Next Level3 Custom Auth0 Action
 The first step to add an NL3 Account Protection Check to an existing application using Auth0 for authentication is to add a custom action which will then be added to your existing login flow.
 ### Adding an Auth0 Custom Action
@@ -185,7 +188,7 @@ Reference:
 <img src="/images/microsoft b2c/azure1.png" />
 The Next Level3 Azure AD B2C integration is designed to be used for any of your existing applications or sites which are using Azure AD for authentication. This integration will allow you to add Account Protection for any application which leverages Azure AD B2C for authentication. 
 
-Pre-requisites
+**Pre-requisites**
 
   * Application leveraging Azure AD B2C for authentication
   * Next Level3 Company Account
@@ -233,7 +236,6 @@ The function in this example uses the Node.js 16 runtime and this is the code yo
 The next step is to setup the Amazon EventBridge event rule that triggers the Lambda function for specific events. Here is a sample rule:
 
 
-
 References:
 
 [https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html)
@@ -243,7 +245,8 @@ References:
 <img src="/images/microsoft b2c/azure1.png" />
 This section will walk you through the required setup and configuration steps needed to enable the Next Level3 Cloud Identity solution in a Microsoft online environment. These steps include setting up and configuring a Microsoft AD FS Farm (if one does not already exist), setting up and configuring the Next Level3 Cloud Identity Account Protection Check by using a Microsoft AD FS Risk Assessment Model Plugin. If you have already federated your Microsoft Online services with AD FS, skip the pre-requisites and go directly to the plugin installation and setup.
 
-Pre-requisites
+**Pre-requisites**
+
   * Install and Configure an AD FS Server Farm
   * Choose Option A or B
     * Option A – use Option A if you want to install and configure AD FS yourself
@@ -442,6 +445,7 @@ _**It may be possible to use other SAML Identity Providers if the SAMLp protocol
 While the following instructions favor AD FS, they should work with any identity provider that supports SAMLp which has differences from the regular SAML protocol. Compatible identity providers will support “SAML 2.0 compliant SP-Lite profile-based Identity Provider” standards.
 
 [https://learn.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-fed-saml-idp](https://learn.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-fed-saml-idp)
+
 ```javascript
 const https = require("https");
 const nJwt = require("njwt");
@@ -548,7 +552,7 @@ Once your function is created and you have updated the ‘ServiceUrl’ in your 
 
 Then, depending on the type of application you are integrating, you will need to update the corresponding settings to point to the custom policy. Examples are provided for a variety of application types listed under ‘Next Steps’ in the above-referenced tutorial.
 
-*If you use IAM Roles and not IAM Users, please contact support to discuss the options for implementation and specific design considerations that may be required to implement this correctly using roles.
+<Tip>If you use IAM Roles and not IAM Users, please contact support to discuss the options for implementation and specific design considerations that may be required to implement this correctly using roles.</Tip>
 
 The next step is to setup the Amazon EventBridge event rule that triggers the Lambda function for specific events. Here is a sample rule:
 
@@ -558,13 +562,16 @@ https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html
       </Accordion>
       <Accordion title="AWS Cognito" href="/Tabs/AWSCog">
 <img src="/images/aws cognito/cognito1.png" />
+
 ## AWS Cognito Integration
 The Next Level3 AWS Cognito integration is designed to be used for your existing applications or sites that are using AWS Cognito for authentication. This integration will allow you to easily add Account Protection to any application that leverages AWS Cognito for authentication.
 
-Pre-requisites
+**Pre-requisites**
+
   * Application Authenticated via Amazon Cognito User Pools
   * Next Level3 Company Account
   * Signing Key created for an application in the Next Level3 Company Portal
+
 ### Account Protection
 The first step to add an NL3 Account Protection Check to an existing application that uses Amazon Cognito User Pools for authentication is to create a Lambda function that performs the lock check. Here is some sample Python code:
 ```Python
@@ -792,7 +799,7 @@ References:
 
 https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html
 
-*If you use IAM Roles and not IAM Users, please contact support to discuss the options for implementation and specific design considerations that may be required to implement this correctly using roles.
+<Tip>If you use IAM Roles and not IAM Users, please contact support to discuss the options for implementation and specific design considerations that may be required to implement this correctly using roles.</Tip>
 
 The next step is to setup the Amazon EventBridge event rule that triggers the Lambda function for specific events. Here is a sample rule:
 
@@ -804,11 +811,12 @@ https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html
 
 ### Supported Native Language Integrations
 For more information about integrating Cloud Identity JIT Access into other applications, refer to the following page:
+
 <Card title="Native Language Integrations" href="/Features/Native Language Integrations">
 Node JS, Python, and Microsoft .NET Framework
 </Card>
 
-## Step 4. Managing Access for your Company Portal Applications
+### Step 4. Managing Access for your Company Portal Applications
 
 Next, you will need to set up Next Level Cloud Identity JIT Access for the endpoints, users, and groups that are associated with your application(s).
 
