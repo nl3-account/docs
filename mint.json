@@ -1,9 +1,9 @@
 {
-  "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "$schema": "https://nextlevel3.com",
+  "name": "Next Level3",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/images/nextlevel3/nextlevel3.svg",
+    "light": "/images/nextlevel3/nextlevel3.svg"
   },
   "favicon": "/favicon.png",
   "colors": {
@@ -18,8 +18,8 @@
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "Company Portal",
+    "url": "https://company.nextlevel3.com"
   },
   "tabs": [
     {
@@ -51,9 +51,8 @@
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "github": "https://github.com/nl3-account",
+    "linkedin": "https://www.linkedin.com/company/next-level3-software"
   },
   "backgroundImage": "/background.png"
 }
