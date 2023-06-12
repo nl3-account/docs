@@ -30,24 +30,11 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["Introduction", "Desktop User Guide", "Mobile User Guide"]
+      "pages": ["Introduction", "Desktop User Guide"]
     },
     {
       "group": "Management",
       "pages": ["Features/Applications and Signing Keys", "Features/Identity Service Provider Integrations", "Features/Native Language Integrations", "Features/Users, Groups, and Endpoints", "Features/Cyber Policies and Activity Logs"]
-    },
-    {
-      "group": "API Documentation",
-      "pages": ["api-reference/authentication"]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
-      ]
     }
   ],
   "footerSocials": {
