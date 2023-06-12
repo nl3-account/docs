@@ -1,0 +1,328 @@
+## Native Language Integrations
+
+      Next Level3 Supports integration directly in multiple native languages. To integrate Cloud Identity JIT Access into your application, refer to the following examples.
+
+    <Tabs>
+      <Tab title="Node JS">
+        <img src="/images/nodejs/nodejs.png" />
+        The Next Level3 Node.js integration is designed to be used for your existing applications or sites that are using native Node.js code for authentication. This integration will allow you to easily add Account Protection to any application that leverages Node.js for authentication. 
+        Pre-requisites
+          * Node.js Application
+          * Next Level3 Company Account
+          * Signing Key created for an application in the Next Level3 Company Portal
+
+        The following Node.js code sample can be used to integrate an account protection check into your existing authentication flow for custom Node.js applications that are handling authentication within the application or where a third-party identity provider does not have a supported integration:
+        ```
+        const https = require("https");
+        const nJwt = require("njwt");
+
+        function getLockStatus(jwt, apiHost, apiPath, requestHeaders) {
+          return new Promise((resolve, reject) => {
+            const postData = JSON.stringify({
+              userIP: requestHeaders["x-forwarded-for"],
+              userDevice: requestHeaders["user-agent"],
+              userLocation: "",
+              integrationType: "aadb2c",
+              integrationData: {},
+            });
+            const options = {
+              host: apiHost,
+              port: "443",
+              path: apiPath,
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "x-nl3-authorization-token": jwt,
+                "Content-Length": Buffer.byteLength(postData),
+              },
+            };
+
+            const req = https.request(options, (response) => {
+              const chunksOfData = [];
+
+              response.on("data", (fragments) => {
+                chunksOfData.push(fragments);
+              });
+
+              response.on("end", () => {
+                const responseBody = Buffer.concat(chunksOfData);
+                resolve(responseBody.toString());
+              });
+              response.on("error", (error) => {
+                console.log(`Error = ${error.message}`);
+                reject(error);
+              });
+            });
+            req.write(postData);
+            req.end();
+          });
+        }
+
+        module.exports = async function (context, req) {
+          let responseMessage = "";
+          let responseStatus = 200;
+          const claims = {
+            iss: process.env.APP_URI,
+            aud: process.env.API_HOST,
+            sub: req.body.signInName, // UserId for which to check lock status
+          };
+          /* Signing Key would ideally be stored and retrieved from a secrets manager
+             and not an environmental variable */
+          const decodedDomainToken = Buffer.from(process.env.SIGNING_KEY, "base64");
+          const jwt = nJwt.create(claims, decodedDomainToken);
+          jwt.setExpiration(new Date().getTime() + 60 * 5 * 1000); // 5 minute expiration
+          jwt.setNotBefore(new Date().getTime() - 60 * 1 * 1000); // 1 minute leeway
+          const authToken = jwt.compact();
+
+          const res = await getLockStatus(
+            authToken,
+            process.env.API_HOST,
+            process.env.API_PATH,
+            req.headers
+          );
+          const result = JSON.parse(res);
+          let failed = false;
+
+          if (result) {
+            context.log(JSON.stringify(result));
+            if (Object.prototype.hasOwnProperty.call(result, "locked")) {
+              if (result.locked) {
+                // Code to deny login
+              }
+            } else {
+              failed = true;
+            }
+          } else {
+            failed = true;
+          }
+          if (failed) {
+            if (process.env.FAIL_CLOSED == "true") {
+              // Code to deny login
+            }
+          } else {
+            // Code to allow login
+          }
+        };
+        ```
+      </Tab>
+      <Tab title="Python">
+        <img src="/images/python/python.png" />
+        ## Python Integration
+        The Next Level3 Python integration is designed to be used for your existing applications or sites that are using Python for authentication. This integration will allow you to easily add Account Protection to any application that leverages Python for authentication. 
+        Pre-requisites
+          * Python Application
+          * Next Level3 Company Account
+          * Signing Key created for an application in the Next Level3 Company Portal
+          * The following Python code sample can be used to integrate an account protection check into your existing authentication flow for custom Python applications that are handling authentication within the application or where a third-party identity provider does not have a supported integration:
+        ```Python
+        import json
+        import os
+        import requests
+        import base64
+        import logging
+        from datetime import datetime
+        import jwt
+
+        def getLockStatus(token, api_uri, api_path, validationData):
+          responseDict = {}
+          try:
+            headers_dict = {"x-nl3-authorization-token": token, "Content-Type": "application/json"}
+            data_dict = {
+              "userIP": validationData["ip"],
+              "userDevice": validationData["device"],
+              "userLocation": validationData["location"],
+              "integrationType": "cognito",
+              "integrationData": json.loads(validationData["additionalData"])
+            }
+            response = requests.post("".join([api_uri,api_path]), headers=headers_dict, json=data_dict)
+            responseDict = response.json()
+          except Exception as e:
+            responseDict = { "message": str(e) }
+
+          return responseDict
+
+        def protectionCheck (userName, validationData):
+          claims = {
+            "iss": os.environ["APP_URI"],
+            "iat": (datetime.utcnow().timestamp() + (-1 * 60)),
+            "exp": (datetime.utcnow().timestamp() + (5 * 60)),
+            "aud": os.environ["API_URI"],
+            "sub": userName
+          }
+          ### Ildeally the Signing Key would be stored and retrieved from a secrets manager
+          ### and not an environmental variable
+          decodedDomainToken = base64.b64decode(os.environ["SIGNING_KEY"])
+          token = jwt.encode(
+            payload=claims,
+            key=decodedDomainToken
+          )
+          response = getLockStatus(token, os.environ["API_URI"], os.environ["API_PATH"], validationData)
+          if response.get("locked", False):
+            // Code for prohibiting login and returning generic error message
+
+          // Code for unlocked or unprotected accounts
+        ```
+      </Tab>
+      <Tab title="Microsoft .NET Framework">
+        <img src="/images/net/net.jpg">
+        ## .NET Integration
+        The following example shows how it’s possible to perform a PreAuthentication Check with Next Level3 to determine lock status and initiate MFA Push based unlocking. If the status is locked, then a push unlock request is sent to the user’s registered devices.
+
+        This code can be used in any application prior to authentication with Active Directory or another IDP.
+        ```
+        using Microsoft.VisualBasic.FileIO;
+        using System;
+        using System.IO;
+        using System.Text;
+        using System.Collections.Generic;
+        using System.Net;
+        using System.Threading.Tasks;
+        using Microsoft.IdentityServer.Public;
+        using System.Security.Claims;
+        using Newtonsoft.Json.Linq;
+        using Newtonsoft.Json;
+        using System.IdentityModel.Tokens.Jwt;
+        using System.IdentityModel;
+        using Microsoft.IdentityModel.Tokens;
+        using System.Web;
+
+        namespace NL3Sample
+        {
+            /// <summary>
+            /// IPConverter is a class for fixing the serialization of NetworkLocation objects
+            /// </summary>
+            //public class IPConverter : JsonConverter<IPAddress>
+            public class IPConverter : JsonConverter<IPAddress>
+            {
+                public override void WriteJson(JsonWriter writer, IPAddress value, JsonSerializer serializer)
+                {
+                    writer.WriteValue(value.ToString());
+                }
+
+                public override IPAddress ReadJson(JsonReader reader, Type objectType, IPAddress existingValue, bool hasExistingValue, JsonSerializer serializer)
+                {
+                    var s = (string)reader.Value;
+                    return IPAddress.Parse(s);
+                }
+            }
+
+            public class NL3SampleClass
+            {
+
+                //Get Signing Key from Secret Storage
+                private string GetSigningKey(String clientId)
+                {
+                    //Add logic to get signing key based on cliendId or the ID for the application
+                    return signingKey;
+                }
+
+                /// <summary>
+                /// This method checks the lock status in NL3 for the user that is authenticating.
+                /// </summary>
+                /// <param name="requestContext"></param>
+                /// <param name="securityContext"></param>
+                /// <param name="protocolContext"></param>
+                /// <param name="additionalClaims"></param>
+                /// <returns></returns>
+                public EvaluatePreAuthentication(RequestContext requestContext, SecurityContext securityContext, ProtocolContext protocolContext, IList<Claim> additionalClaims)
+                {
+                    //The parameters passed in are default parameters passed by ADFS
+                    //You may have access to this informaiton in other objects
+                    var referer = requestContext.Headers.Get("Referer");
+                    Uri refererUri = new Uri(referer);
+                    string clientId = protocolContext.ClientId;
+                    if(clientId == null || clientId.Length == 0)
+                    {
+                        clientId = HttpUtility.ParseQueryString(refererUri.Query).Get("client_id");
+                    }
+                    // Get Base64 Encoded Signing Key
+                    string base64SigningKey = GetSigningKey(clientId);
+                    if (base64SigningKey != null && base64SigningKey.Length > 5)
+                    {
+                        //Get current username
+                        string username = securityContext.UserIdentifier;
+
+                        //Decode the signing key
+                        byte[] key = Convert.FromBase64String(base64SigningKey);
+                        SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
+
+                        //Create JWT passing in the FQDN associated with your signing key as first option
+                        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                        JwtSecurityToken token = handler.CreateJwtSecurityToken("<FQDN_FOR_SIGNING_KEY>", "api.nextlevel3.com", new ClaimsIdentity(new[] {
+                              new Claim("sub", username)}), DateTime.UtcNow.AddMinutes(-1), DateTime.UtcNow.AddMinutes(5), DateTime.UtcNow.AddMinutes(-1), new SigningCredentials(securityKey,
+                            SecurityAlgorithms.HmacSha256Signature));
+
+                        //If no access to requestContext, get current client's IP and other details some other way
+                        HttpWebRequest requestIPDetails = (HttpWebRequest)WebRequest.Create("https://ipinfo.io/" + requestContext.ClientIpAddresses[0].ToString() + "/json?token=<API_TOKEN>");
+                        JObject jsonIPDetails = new JObject();
+                        string location = "";
+                        sting geo = "";
+                        using (HttpWebResponse responseIPDetails = (HttpWebResponse)requestIPDetails.GetResponse())
+                        using (Stream stream = responseIPDetails.GetResponseStream())
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            jsonIPDetails = JObject.Parse(reader.ReadToEnd());
+                            if(jsonIPDetails.HasValues)
+                            {
+                                location = jsonIPDetails["city"] + ", " + jsonIPDetails["region"];
+                                geo = jsonIPDetails["loc"];
+                            }
+                        }
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.nextlevel3.com/nl3/api/v1/accountProtectionCheck");
+                        var jsonSettings = new JsonSerializerSettings();
+                        jsonSettings.Converters.Add(new IPConverter());
+                        JObject jPostData = new JObject
+                        {
+                            ["userIP"] = requestContext.ClientIpAddresses[0].ToString(),
+                            ["userDevice"] = requestContext.UserAgentString,
+                            ["userLocation"] = location,
+                            ["userGeo"] = geo,
+                            ["integrationType"] = ".NET"
+                        };
+                        jPostData.Add(new JProperty("integrationData", JObject.Parse(JsonConvert.SerializeObject(requestContext, Formatting.Indented, jsonSettings))));
+                        jPostData["integrationData"]["locationInfo"] = jsonIPDetails;
+                        byte[] byteArray = Encoding.UTF8.GetBytes(jPostData.ToString());
+                        request.Method = "POST";
+                        request.ContentType = "application/json";
+                        request.ContentLength = byteArray.Length;
+                        request.Headers.Add("x-nl3-authorization-token", handler.WriteToken(token));
+                        request.Headers.Add("x-forwarded-for", requestContext.ClientIpAddresses[0].ToString());
+                        request.Headers.Add("User-Agent", requestContext.UserAgentString);
+                        request.Headers.Add("x-nl3-device-location", geo);
+                        request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+                        Stream requestStream = request.GetRequestStream();
+                        requestStream.Write(byteArray, 0, byteArray.Length);
+                        requestStream.Close();
+
+                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        using (Stream stream = response.GetResponseStream())
+                        using (StreamReader reader = new StreamReader(stream))
+                        {
+                            JObject jsonResponse = JObject.Parse(reader.ReadToEnd());
+                            JToken locked;
+                            if (jsonResponse.TryGetValue("locked", out locked))
+                            {
+                                if (locked.Value<bool>())
+                                {
+                                    // code to block login
+                                }
+                                else
+                                {
+                                    // code to allow login
+                                }
+                            }
+                            else
+                            {
+                                // code if user not enabled for NL3 protection
+                            }
+                        }
+                    }
+
+                    // Code to fail open or closed based on missing configuration or other issues
+                }
+            }
+        }
+        ```
+      </Tab>
+    </Tabs>
