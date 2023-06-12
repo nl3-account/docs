@@ -57,7 +57,7 @@ The User Enablement process is fairly simple. Somewhere in your application, you
 
 ### Step 2 - Add Redirect to Next LEVEL3
 
-The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter (e.g. https://cloud.nextlevel3.com?auth-token=<JWT created in Step 1>). Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
+The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter \e.g. \https://cloud.nextlevel3.com?auth-token=\*JWT*/ created in Step 1. Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
 
 ## Group Management
 Groups are managed and created in the Group Manager pane:
@@ -70,9 +70,9 @@ Groups are added by selecting the **"+ New Group"** icon in the top right-hand c
 
 Once a group has been created the user can then manage the users in the group by selecting the icon or delete the group by selecting the trashcan icon in the "ACTION" column. 
 
-Clicking the pencil icon in the action column will bring up the "Edit Group" page where the administrator can select group members by either searching for the user in the search box or using the list of users and then clicking the ">" to add the user to the group. 
+Clicking the pencil icon in the action column will bring up the "Edit Group" page where the administrator can select group members by either searching for the user in the search box or using the list of users and then clicking the "\>" to add the user to the group. 
 
-Also, the administrator can choose to add all users in the list by selecting the ">>" button. 
+Also, the administrator can choose to add all users in the list by selecting the "\>\>" button. 
 
 Once the administrator is finished, clicking the "Save" option will save the changes made. 
 
@@ -84,7 +84,7 @@ Clicking the "Return" option will cancel any pre-saving changes made to the grou
 
 ## Protecting Endpoints
 <AccorionGroup>
-    <Accordion title="Windows" icon="/icons/windows.svg">
+    <Accordion title="Windows" icon="/icons/windows">
 ## Windows
 
 ### Prerequisites
@@ -189,10 +189,10 @@ You will need:
     
     The AccountTry and GroupTry configuration are both JSON arrays. Example values:
 
-    ```JSON
+```JSON
     "AccountTry": [ "breakglass", "second-account" ]
     "GroupTry": [ "wheel", "staff" ]
-    ```
+```
     </Accordion>
     <Accordion title="MacOS" icon="/icons/apple.svg">
     ## Apple... Coming soon!
