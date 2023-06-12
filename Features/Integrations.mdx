@@ -17,7 +17,7 @@ description: 'Identity Service Providers and Native languages'
 
 ### Identity Provider Integration Instrcutions
   <AccordionGroup>
-      <Accordion title="Auth0" href="/Tabs/auth0">
+      <Accordion title="Auth0">
 ## Auth0 Integration
 The Next Level3 Auth0 integration is designed to be used for any of your existing applications or sites which are using Auth0 for authentication. This integration will allow you to easily add Account Protection to any application that leverages Auth0 for authentication.
 **Pre-requisites**
@@ -35,7 +35,7 @@ b. Enter the following Information (replacing myApplication with the name of you
 * Runtime – Node 16 (Recommended)
 <img src="/images/auth0/auth0 pic 2.png" />
 c. In the code editor for the action, remove all the existing default code and replace it with the following NL3 Action code.
-```
+```javascript
 const https = require('https');
 const nJwt = require('njwt');
 
@@ -111,8 +111,10 @@ exports.onExecutePostLogin = async (event, api) => {
 };
 ```
 Once you have updated the code, click “Save Draft”. After doing this, your action code should look like the following:
+
 <img src="/images/auth0/auth0 pic 3.png" />
-d. Now you need to set up some secrets for the new custom action in order to configure it for your Auth0 protected application. This includes a secret for your NL3 signing key so that the action can check the lock status of users that are set up for Account Protection. You can retrieve your signing key from the Next Level3 Company Portal (https://company.nextlevel3.com) after you have added the application to the company portal and validated the associated domain for that application. 
+
+d. Now you need to set up some secrets for the new custom action in order to configure it for your Auth0 protected application. This includes a secret for your NL3 signing key so that the action can check the lock status of users that are set up for Account Protection. You can retrieve your signing key from the [Next Level3 Company Portal](https://company.nextlevel3.com) after you have added the application to the company portal and validated the associated domain for that application. 
 
 To update secrets, click the ‘Key’ Icon to the left of the code editor called secrets and select the “Add Secret” button   
           
@@ -145,7 +147,7 @@ f. Next click the package icon labeled “Modules” to add some additional npm 
 
 g. Next, click “Save Draft” from the code editor window to save the action.
 
-<img src="/images/auth0/auth0 pic 7.png">
+<img src="/images/auth0/auth0 pic 7.png" />
 
 h. Click “Deploy” from the code editor window to deploy the action. After you click “Deploy”, a slider popup will appear letting you know that the action was successfully deployed.
 
