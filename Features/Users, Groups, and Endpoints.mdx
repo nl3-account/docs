@@ -22,14 +22,10 @@ The "Actions" button in the top right corner, allows administrators to add users
 After a user has been added they will have the following account set up options:
 
 <CardGroup>
-    <Card title="Desktop Browser" 
-    href="/Desktop User Guide" 
-    icon="https://fontawesome.com/icons/desktop?f=classic&s=solid">
+    <Card title="Desktop Browser" href="/Desktop User Guide" icon="https://fontawesome.com/icons/desktop?f=classic&s=solid">
     Signing into the Company Portal using a web browser.
     </Card>
-    <Card title="Mobile Device Application"
-    href="/Mobile User Guide"
-    icon="https://fontawesome.com/icons/mobile-screen-button?f=classic&s=solid">
+    <Card title="Mobile Device Application" href="/Mobile User Guide" icon="https://fontawesome.com/icons/mobile-screen-button?f=classic&s=solid">
     Signing into the company portal using the Next Level3 Mobile app.
     </Card>
 </CardGroup>
@@ -43,7 +39,7 @@ If you wish to allow users to self service opt in and enable Next Level3 protect
 
  
 **Step 1 - Create a JWT for the User**
-The User Enablement process is fairly simple. Somewhere in your application, you need to generate a JSON Web Token (JWT) that includes the login name for the user and a few other properties including an expiration claim (more details below). The JWT will need to be signed in your backend application code with the NL3 Domain Key associated with your application. The signature will be verified on our end to ensure the request for enablement is coming from your application. Here is a sample header and payload for the JWT:
+The User Enablement process is fairly simple. Somewhere in your application, you need to generate a JSON Web Token \(JWT\) that includes the login name for the user and a few other properties including an expiration claim \(more details below\). The JWT will need to be signed in your backend application code with the NL3 Domain Key associated with your application. The signature will be verified on our end to ensure the request for enablement is coming from your application. Here is a sample header and payload for the JWT:
 
 **Header**
 ```JSON
@@ -57,7 +53,7 @@ The User Enablement process is fairly simple. Somewhere in your application, you
 
 ### Step 2 - Add Redirect to Next LEVEL3
 
-The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter e.g. https://cloud.nextlevel3.com?auth-token=\*JWT*/ created in Step 1. Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
+The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter e.g. \https://cloud.nextlevel3.com?auth-token=\*JWT*/ created in Step 1. Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
 
 ## Group Management
 Groups are managed and created in the Group Manager pane:
@@ -83,7 +79,7 @@ Clicking the "Return" option will cancel any pre-saving changes made to the grou
 <img src="/images/Group Management/Group3" />
 
 ## Protecting Endpoints
-<AccorionGroup>
+<AccordionGroup>
     <Accordion title="Windows" icon="/icons/windows">
 ## Windows
 
