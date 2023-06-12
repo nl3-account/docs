@@ -145,23 +145,23 @@ You will need:
     5. Copy the signing key (it may be multiple lines), and store it with the URL from earlier.
     <img src="/images/pam/pam3.png" />
     6. Download the installer, and copy it to the system you want to install it on.
-    <img src="images/pam/pam9.png" />
+    <img src="/images/pam/pam9.png" />
     7. Become the root user and extract the installer to the designated folder.
-    <img src="images/pam/pam10.png" />
+    <img src="/images/pam/pam10.png" />
     8. Run the installer, it will ask you for the information stored earlier.
-    <img src="images/pam/pam11.png" />
+    <img src="/images/pam/pam11.png" />
     9. Next the installer shows the changes to add nextlevel3 to the PAM configuration. If you are happy with these changes, type ‘y’ and press enter.
-    <img src="images/pam/pam12.png" />
+    <img src="/images/pam/pam12.png" />
     10. The installer will then install the module and its configuration.
-    <img src="images/pam/pam13.png" />
+    <img src="/images/pam/pam13.png" />
     11. This will install the module with the defaults: all accounts and groups will require NextLevel3 MFA, and, if the NextLevel3 server cannot be contacted, will be denied access.
-    <img src="images/pam/pam6.png" />
+    <img src="/images/pam/pam6.png" />
     12. Confirm that you and other users can log in, especially that the appropriate connectivity and usernames are in place.
 
 ### Removal
 
     The module consists of two files and an entry in the pam configuration. To remove it temporarily, simply remove all references to it in pam.d
-    <img src="images/pam/linux/pam14.png" />
+    <img src="/images/pam/linux/pam14.png" />
     
     This shows that there is a line in /etc/pam.d/base-auth that needs to be removed.
 
@@ -175,7 +175,7 @@ You will need:
 ### Additional Configuration
 
     There are three additional settings that you can change by editing the configuration file. By default this is installed as /etc/nextlevel3.json. The file created by the sample installation is below:
-    <img src="images/pam/pam15.png" />
+    <img src="/images/pam/pam15.png" />
 
     The APIKey and APPURI values were filled in by the installer. Settings that you can change are:
 
