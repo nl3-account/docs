@@ -21,6 +21,13 @@
     "name": "Company Portal",
     "url": "https://company.nextlevel3.com"
   },
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/nl3-account"
+    },
+  ],
   "navigation": [
     {
       "group": "Get Started",
