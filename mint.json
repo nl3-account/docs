@@ -38,7 +38,7 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["Introduction", "/Features/Setting up your Account", "/Features/Securing your Applications", "/Features/Setting up End Users",  "/Features/Protecting your Endpoints", "Features/Integrating your Identity Provider", "Features/Native Language Integrations", "Features/Cyber Policies and Activity Logs"]
+      "pages": ["Introduction", "Features/Setting up your Account", "Features/Securing your Applications", "Features/Setting up End Users",  "Features/Protecting your Endpoints", "Features/Integrating your Identity Provider", "Features/Native Language Integrations", "Features/Cyber Policies and Activity Logs"]
     }
   ],
   "footerSocials": {
