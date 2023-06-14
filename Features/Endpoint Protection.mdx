@@ -1,0 +1,125 @@
+---
+title: 'Endpoint  Protection'
+description: 'Configuring  Endpoint  Security'
+---
+
+A pluggable authentication module (PAM) allows programs that rely on authentication to be written independently of the underlying authentication scheme. Next Level3 Cloud Identity JIT Access allows you to protect your endpoints by securing them at the initial user access point. If you enable this feature for a Windows, Linux, or MacOS device, you will have the ability to enable and disable access and manage who has access to that endpoint. This feature is available for Windows, Linux, and MacOS operating systems and below are the steps to enable it.
+
+<AccordionGroup>
+    <Accordion title="Windows" icon="windows">
+## Windows
+
+### Prerequisites
+
+You will need:
+
+    * Access to the NextLevel3 portal to an existing application with an API key.
+    * Access as ‘administrator’ on the system that the module will be installed on
+    * Users available for testing.
+
+### Standard  Installation
+    
+    1. Log into your NextLevel3 portal at https://company.nextlevel3.com/
+    2. Navigate to Applications and choose the appropriate application (in this case jump-servers).
+    3. Copy the application URL (in this case jump-servers.infra.company.com) somewhere you can retrieve it.
+    <img src="/images/pam/pam1.png" />
+    4. Next, navigate to Keys & Tokens, select the Application from step 2 and Key Type “Application Signing Keys”, then click on the Key to retrieve the Application Signing Key.
+    <img src="/images/pam/pam2.png" />
+    5. Copy the signing key (it may be multiple lines), and store it with the URL from earlier.
+    <img src="/images/pam/pam3.png" />
+    6. Download the installer from the company portal on the Windows user account you are protecting.
+    7. Copy the file to the following directory: C:\Windows\System32
+    8. Run the following Windows Powershell commands to create the LSA Registry entries to install sub authentication module, configure event logging, and create registry entries for sub authentication module connection to NextLevel3:
+    <img src="/images/pam/pam4.png" />
+    9. Depending on the endpoint application you are configuring, you will need to add the API Key, API URI, and APP URI to the registry using the following commands:
+    <img src="/images/pam/pam5.png" />
+    10. Restart your device, this will install the module and its configuration. This will require your account to use NextLevel3 MFA, and, if the NextLevel3 server cannot be contacted, will be denied access.
+    <img src="/images/pam/pam6.png" />
+    11. Confirm that you and other users can log in, especially that the appropriate connectivity and usernames are in place.
+
+### Removal
+
+    The module consists of Item’s and ItemProperty’s that were created during the NextLevel3 installation. You will need to run the following command to remove the module from your device.
+    <img src="/images/pam/pam7.png" />
+
+    After running the above commands you will need to restart your device for the changes to take place.
+
+    ### Additional  Configuration
+
+    The following command can be entered to give designated users NextLevel3 MFA bypass privileges:
+    <img src="/images/pam/pam8.png" />
+    </Accordion>
+    <Accordion title="Linux" icon="linux">
+## Linux
+
+### Prerequisites
+
+You will need:
+
+    * Access to the NextLevel3 portal to an existing application with an API key.
+    * Access as ‘root’ (directly or via su/sudo) on the system that the module will be installed on.
+    * Users available for testing.
+
+### Standard  Installation
+
+    1. Log into your NextLevel3 portal at https://company.nextlevel3.com/
+    2. Navigate to Applications and choose the appropriate application (in this case jump-servers).
+    3. Copy the application URL (in this case jump-servers.infra.company.com) somewhere you can retrieve it.
+    <img src="/images/pam/pam1.png" />
+    4. Next, navigate to Keys & Tokens, select the Application from step 2 and Key Type “Application Signing Keys”, then click on the Key to retrieve the Application Signing Key.
+    <img src="/images/pam/pam2.png" />
+    5. Copy the signing key (it may be multiple lines), and store it with the URL from earlier.
+    <img src="/images/pam/pam3.png" />
+    6. Download the installer, and copy it to the system you want to install it on.
+    <img src="/images/pam/pam9.png" />
+    7. Become the root user and extract the installer to the designated folder.
+    <img src="/images/pam/pam10.png" />
+    8. Run the installer, it will ask you for the information stored earlier.
+    <img src="/images/pam/pam11.png" />
+    9. Next the installer shows the changes to add nextlevel3 to the PAM configuration. If you are happy with these changes, type ‘y’ and press enter.
+    <img src="/images/pam/pam12.png" />
+    10. The installer will then install the module and its configuration.
+    <img src="/images/pam/pam13.png" />
+    11. This will install the module with the defaults: all accounts and groups will require NextLevel3 MFA, and, if the NextLevel3 server cannot be contacted, will be denied access.
+    <img src="/images/pam/pam6.png" />
+    12. Confirm that you and other users can log in, especially that the appropriate connectivity and usernames are in place.
+
+### Removal
+
+    The module consists of two files and an entry in the pam configuration. To remove it temporarily, simply remove all references to it in pam.d
+    <img src="/images/pam/pam14.png" />
+    
+    This shows that there is a line in /etc/pam.d/base-auth that needs to be removed.
+
+    To remove the module entirely, remove the entries from /etc/pam.d, the configuration file /etc/nextlevel3.json and the module itself, pam_nextlevel3.so. You can find the module in:
+
+        - Alpine: /lib/security
+        - Red Hat: /usr/lib64
+        - SuSE: /usr/lib64/security
+        - Ubuntu: /lib/x86_64-linux-gnu/security
+
+### Additional  Configuration
+
+    There are three additional settings that you can change by editing the configuration file. By default this is installed as /etc/nextlevel3.json. The file created by the sample installation is below:
+    <img src="/images/pam/pam15.png" />
+
+    The APIKey and APPURI values were filled in by the installer. Settings that you can change are:
+
+        - AccountTry: a list of accounts that are allowed to log in if the nextlevel3 service cannot be contacted. If the service can be contacted, MFA will occur, if it cannot be contacted they will be allowed in. This should be restricted to accounts used for “break glass” functions.
+        - GroupTry: has the same behavior as AccountTry, but contains a list of groups.
+        - Trace: enable tracing, leave this to false unless you are diagnosing an issue with our support team.
+    
+    The AccountTry and GroupTry configuration are both JSON arrays. Example values:
+
+```JSON
+    "AccountTry": [ "breakglass", "second-account" ]
+    "GroupTry": [ "wheel", "staff" ]
+```
+    </Accordion>
+    <Accordion title="MacOS" icon="apple">
+    ## Apple...  Coming  Soon!
+    
+    </Accordion>
+</AccordionGroup>
+
+
