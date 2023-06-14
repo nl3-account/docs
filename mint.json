@@ -11,13 +11,15 @@
     "light": "#55adb0",
     "dark": "#4a4ca4"
   },
-  "anchors": [
+  "topAnchor": [
     {
       "icon": "book",
       "name": "Documentation",
       "color": "#4a4ca4",
       "url": "Introduction"
-    },
+    }
+  ],
+  "anchors": [
     {
       "icon": "code",
       "name": "API Reference",
