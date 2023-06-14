@@ -1,0 +1,71 @@
+---
+title: 'Setting  up  End  Users'
+description: 'Manage the users and groups that have access to your applications'
+---
+
+In order to view and monitor access for company applications you will need to configure your users and groups for application access.
+
+## User  Management
+
+There are two methods for adding users to the company portal the opt-in method and automatic enrollment method.
+
+### Opt  In  Method
+If you wish to allow users to self service opt in and enable Next Level3 protection for their accounts you must provide the users with a link 
+
+ 
+#### Step  1  -  Create  a  JWT  for  the  User 
+The User Enablement process is fairly simple. Somewhere in your application, you need to generate a JSON Web Token \(JWT\) that includes the login name for the user and a few other properties including an expiration claim \(more details below\). The JWT will need to be signed in your backend application code with the NL3 Domain Key associated with your application. The signature will be verified on our end to ensure the request for enablement is coming from your application. Here is a sample header and payload for the JWT:
+
+**Header**
+```JSON
+{"typ":"JWT","alg":"HS256"}
+```
+
+**Payload**
+```JSON
+{"iss":"www.myapplication.com","iat":1642525200,"exp":1674061200,"aud":"auth.nextlevel3.com","sub":"myuser@myapplication.com"}
+```
+
+#### Step  2  -  Add  Redirect  to  Next  Level3
+
+The next step is to add an NL3 User Enablement workflow in your application. This could be something as simple as a link that says, “Click here to enable NL3 protection”, or a checkbox on the user’s profile screen. However you choose to implement the workflow, enablement occurs when your application redirects the user or opens a new tab or browser window and passes the JWT created in Step 1 to our website in the “auth-token” query parameter e.g. \(https://cloud.nextlevel3.com?auth-token=\*JWT*/\) created in Step 1. Then the user will login with an existing NL3 account or signup for a new one. This account will allow the user to link their application login with an NL3 account that they can use to manage their protected account lock statuses with.
+
+
+### Adding  Users  Manually
+All users are managed from the Company Portal from the "Users" tab.
+
+<img src="/images/User Management/User1.png" />
+
+Here, the administrator can enable/disable account protection for associated applications and enable/disable administrative access to the Company Portal. 
+
+When a user is unable to access their account through any of their authorized devices and they have lost their recovery key the administrator can utilize the reset account function.
+
+<img src="/images/User Management/User2.png" />
+
+The "Actions" button in the top right corner, allows administrators to add users either manually or imported via .csv and view previous user imports.
+
+### Actions  Menu
+<img src="/images/User Management/User3.png" />
+
+## Group  Management
+Groups are managed and created in the Group Manager pane:
+
+<img src="/images/Group Management/Group1.png" />
+
+Groups are added by selecting the **"+ New Group"** button in the top right-hand corner of the pane. Selecting this option will bring up the "New Group" creation page where the user can add the name and description of the group:
+
+<img src="/images/Group Management/Group2.png" />
+
+Once a group has been created the user can then manage the users in the group by selecting the pencil icon or delete the group by selecting the trashcan icon in the "ACTION" column. 
+
+Clicking the pencil icon in the action column will bring up the "Edit Group" page where the administrator can select group members by either searching for the user in the search box or using the list of users and then clicking the "\>" to add the user to the group. 
+
+Also, the administrator can choose to add all users in the list by selecting the "\>\>" button. 
+
+Once the administrator is finished, clicking the "Save" button will save the changes made. 
+
+Clicking the "Return" option will cancel any pre-saving changes made to the group and will bring you back to the Group management pane.
+
+### Example  of  Group  Creation/Management
+
+<img src="/images/Group Management/Group3.png" />
