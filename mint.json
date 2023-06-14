@@ -15,13 +15,13 @@
     {
       "icon": "book",
       "name": "Documentation",
-      "color": "4a4ca4",
+      "color": "#4a4ca4",
       "url": "Introduction"
     },
     {
       "icon": "code",
       "name": "API Reference",
-      "color": "4a4ca4",
+      "color": "#4a4ca4",
       "url": "https://api.nextlevel3.com/nl3/api/swagger-ui/index.html#/"
     }
   ],
@@ -44,7 +44,7 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["Introduction", "Features/Account Setup", "Features/Securing your Applications", "Features/User Management",  "Features/Enpoint Protection", "Features/Integrating your Identity Provider", "Features/Native Language Integrations", "Features/Cyber Policies and Activity Logs"]
+      "pages": ["Introduction", "/Features/Account Setup", "/Features/Securing your Applications", "/Features/User Management",  "/Features/Endpoint Protection", "Features/Integrating your Identity Provider", "Features/Native Language Integrations", "Features/Cyber Policies and Activity Logs"]
     }
   ],
   "footerSocials": {
