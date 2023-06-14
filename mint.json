@@ -2,15 +2,29 @@
   "$schema": "https://nextlevel3.com",
   "name": "Next Level3",
   "logo": {
-    "dark": "/images/nextlevel3/nl3.svg",
-    "light": "/images/nextlevel3/nl3.svg"
+    "dark": "/images/nextlevel3/150x150bb.png",
+    "light": "/images/nextlevel3/150x150bb.png"
   },
-  "favicon": "/favicon.png",
+  "favicon": "/images/nextlevel3/150x150bb.png",
   "colors": {
-    "primary": "#12A7D3",
-    "light": "#81D7F7",
-    "dark": "#004E7A"
+    "primary": "#ffffff",
+    "light": "#55adb0",
+    "dark": "#4a4ca4"
   },
+  "anchors": [
+    {
+      "icon": "book",
+      "name": "Documentation",
+      "color": "4a4ca4",
+      "url": "Introduction"
+    },
+    {
+      "icon": "code",
+      "name": "API Reference",
+      "color": "4a4ca4",
+      "url": "https://api.nextlevel3.com/nl3/api/swagger-ui/index.html#/"
+    }
+  ],
   "topbarLinks": [
     {
       "name": "Company Page",
@@ -21,22 +35,17 @@
     "name": "Company Portal",
     "url": "https://company.nextlevel3.com"
   },
-  "anchors": [
+  "tabs": [
     {
-      "name": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/nl3-account"
-    },
+      "name": "Documentation",
+      "url": "Introduction"
+    }
   ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["Introduction", "Desktop User Guide"]
-    },
-    {
-      "group": "Management",
-      "pages": ["Features/Applications and Signing Keys", "Features/Identity Service Provider Integrations", "Features/Native Language Integrations", "Features/Users, Groups, and Endpoints", "Features/Cyber Policies and Activity Logs"]
-    },
+      "pages": ["Introduction", "Features/Account Setup", "Features/Securing your Applications", "Features/User Management",  "Features/Enpoint Protection", "Features/Integrating your Identity Provider", "Features/Native Language Integrations", "Features/Cyber Policies and Activity Logs"]
+    }
   ],
   "footerSocials": {
     "github": "https://github.com/nl3-account",
