@@ -1,0 +1,165 @@
+---
+title: 'Cyber Policies and Activity Logs'
+description: 'Managing Policies and Monitoring Activity'
+---
+
+## Cyber Policies
+
+Cyber Policies are used to control access to application accounts and managed that access for a companies users (employees, contractors, third parties and customers). There are a number of use cases for a variety of industries in which Cyber Policies provide solutions to solve problems. This document will outline each of the Cyber Policy types available today and will define how to create, use, and manage cyber policies using the Next Level3 Company Portal.
+
+### Accessing Cyber Policies
+Requirements: Admin Level Next Level3 Company Account Access.
+
+Login to [company.nextlevel3.com](https://company.nextlevel3.com) and navigate to "Management" –> "Cyber Policies".
+
+## Cyber Policy Creation
+
+### Policy Types
+Currently, there are three policy types supported by the Next Level3 Cloud Identity JIT Access platform including;
+
+    - Scheduled Policies – Policies triggered at a scheduled time.
+    - Multi-Approval Policies – Policies requiring more than one user to approve unlocking an account prior to account unlock.
+    - Alert Policies – Policies that are triggered when an alert occurs from an external system such as an EDR, IDR, SIEM tools, or other alert eventing system.
+<Tabs>
+    <Tab icon="icons/clock-regular.svg" title="Scheduled">
+### Scheduled Policies
+Scheduled policies are used to lock and unlock accounts at a specific time. They can be scheduled to run starting on a specific date and can optionally have an end date. To create a new scheduled policy, click the add new policy button in the Policy Manager.
+
+<img src="/images/policy1.png" />
+
+This will create a new policy and allow you to specify the following;
+
+    - Policy Type: Scheduled Policy
+    - Policy Name: Friendly name for the policy you are creating.
+    - Start Date: The date the policy will take action.
+    - End Date: Optional End date. If you do not want an end date, select the No End Date check box.
+    - Frequency: Frequency at which this policy will be evaluated. (Daily, Weekly, Weekdays, BiWeekly, Monthly, Annually)
+    - Action – Action the policy will take when applied
+        - Allow Accounts to be Unlocked – This action will Lock Accounts but allow users to override this lock by approving an Unlock Request from the Next Level3 user portal/mobile app.
+        - Unlock Accounts – Will set the user's account status to Unlocked.
+        - Lock Accounts – Will set the user's account status to Locked. This will prevent the user from overriding the lock and they will not be able to unlock the account.
+    - Time: The time that the policy will be executed.
+
+**EXAMPLE SCHEDULED POLICY**
+
+<img src="/images/policy2.png" />
+
+### Applying Scheduled Policies
+Once the Scheduled policy is created it can be applied. To apply the policy, you are selecting the list of users/group accounts that the scheduled policy will be applied to. To apply the policy, click the "Assign Groups to Policy" button on the Policy Management page for that policy.
+
+**EXAMPLE "ASSIGN GROUPS TO POLICY" ACTION**
+
+<img src="/images/policy3.png" />
+
+You will then need to assign users and/or groups to the policy by selecting them in the list to the left and moving them to the right by using the ">" button or assigning all users and groups by using the ">>" button.
+
+**EXAMPLE SCHEDULED POLICY ASSIGNMENT**
+
+<img src="/images/policy4.png" />
+</Tab>
+<Tab icon="/icons/circle-exclamation-solid.svg" title="Alert">
+
+### Alert Policies
+Alert policies are designed to act as a safeguard in the event of scenarios such as:
+
+    * An Intrusion is detected
+    * Malware is detected
+    * Ransomware is detected
+    * Unauthorized access to a system is detected
+    * Other critical security alerting scenarios
+
+To create a new Alert policy, click the add new policy button in the Policy Manager.
+
+<img src="/images/policy1.png" />
+
+This will create a new policy and allow you to specify the following;
+
+    - Policy Type: Alert Policy
+    - Policy Name: Friendly name for the policy you are creating.
+    - Action – Action the policy will take when applied
+        - Allow Accounts to be Unlocked – This action will Lock Accounts but allow users to override this lock by approving an Unlock Request from the Next Level3 user portal/mobile app.
+        - Unlock Accounts – Will set the user's account status to Unlocked.
+        - Lock Accounts – Will set the user's account status to Locked. This will prevent the user from overriding the lock and they will not be able to unlock the account.
+
+**EXAMPLE ALERT POLICY**
+
+<img src="/images/policy5.png" />
+
+### Applying Alert Policies
+Once the Alert policy is created it can be applied. To apply the policy, you are selecting the list of users/group accounts that the alert policy will be applied to. To apply the policy, click the "Assign Groups to Policy" button on the Policy Management page for that policy.
+
+**EXAMPLE "ASSIGN GROUPS TO POLICY" ACTION**
+
+<img src="/images/policy6.png" />
+
+You will then need to assign users and/or groups to the policy by selecting them in the list to the left and moving them to the right by using the ">" button or assigning all users and groups by using the ">>" button.
+
+**EXAMPLE ALERT POLICY ASSIGNMENT**
+
+<img src="/images/policy7.png" />
+
+### Executing Alert Policies
+**Manually**
+Alert policies can be executed directly in the Company Management portal by clicking the execute policy link for the policy.
+
+**EXAMPLE OF EXECUTING AN ALERT POLICY**
+
+<img src="/images/policy8.png" />
+
+**Programmatically**
+Alert policies can also be executed programmatically. To execute an alert policy programmatically you can call the Next Level3 API.
+
+```HTML
+Example API requestcurl –location –request POST ‘http://localhost:80/nl3/api/v1/sdk/policies/${POLICY_ID}/execute’ \
+–header ‘x-nl3-server-api-token: ${API_TOKEN_FROM_COMPANY_PORTAL}’ \
+–header ‘Content-Type: application/json’
+```
+</Tab>
+<Tab icon="/icons/unlock-keyhole-solid.svg" title="Multi-Approval">
+### Multi-Approval Policies
+Multi Approval policies enable you to define a secondary approver who must approve any unlock request for the accounts the policy is applied to. The flow works like this:
+
+    1. John wants to login to his application using the root@mycompany.com account. John has already registered this account in his Next Level3 account and will receive an Unlock request which he must approve prior to being able to log in.
+    2. The account root@mycompany.com, has a multi-approval policy applied to it which requires someone in the Central Security Group to also approve an Unlock Request prior to John being able to log in.
+    3. When John attempts to login he is sent a notification to his Next Level3 app, which he must approve. Members of the Central Security Group are also sent an approval request and at least one of these members must approve the unlock. Once approved, the root@mycompany.com account is unlocked and John is able to log in using that credential.
+
+To create a new Multi-Approval policy, click the add new policy button in the Policy Manager.
+
+<img src="/images/policy1.png" />
+
+This will create a new policy and allow you to specify the following;
+
+    - Policy Type: Multi-Approval Policy
+    - Policy Name: Friendly name for the policy you are creating.
+    - Action – Action the policy will take when applied
+        - Allow Accounts to be Unlocked – This action will Lock Accounts but allow users to override this lock by approving an Unlock Request from the Next Level3 user portal/mobile app.
+        - Unlock Accounts – Will set the user's account status to Unlocked.
+        - Lock Accounts – Will set the user's account status to Locked. This will prevent the user from overriding the lock and they will not be able to unlock the account.
+
+**EXAMPLE MULTI-APPROVAL POLICY**
+
+<img src="/images/policy9.png" />
+
+### Applying Multi-Approval Policies
+
+Once the Multi-Approval policy is created it can be applied. To apply the policy, you are selecting the list of users/group accounts for which secondary approval will be required prior to unlocking. To apply the policy, click the Assign Groups to Policy button on the Policy Management page for that policy.
+
+<img src="/images/policy10.png" />
+
+You will then need to assign users and/or groups to the policy by selecting them in the list to the left and moving them to the right by using the ">" button or assigning all users and groups by using the ">>" button.
+
+**EXAMPLE MULTI-APPROVAL POLICY ASSIGNMENT**
+
+<img src="/images/policy11.png" />
+    </Tab>
+</Tabs>
+
+## Activity Logs
+### Reviewing Activity Logs
+All activity for the Next Level3 Cloud Identity products is available for review for administrators with access to the Company Portal. It is also made available via the Cloud Identity API.
+
+Filter By Name: You can filter the current results on the page by username. 
+
+Search By Name: You can search the logs of all records by username.
+
+<img src="/images/Activity.png" />
