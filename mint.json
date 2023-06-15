@@ -2,10 +2,10 @@
   "$schema": "https://nextlevel3.com",
   "name": "Next Level3",
   "logo": {
-    "dark": "/images/nextlevel3/Next Level3 - Square.png",
-    "light": "/images/nextlevel3/Next Level3 - Square.png"
+    "dark": "/images/nextlevel3/Next Level 3 - Square .png",
+    "light": "/images/nextlevel3/Next Level 3 - Square .png"
   },
-  "favicon": "/images/nextlevel3/Next Level3 - Square.png",
+  "favicon": "/images/nextlevel3/Next Level 3 - Square .png",
   "colors": {
     "primary": "#55adb0",
     "light": "#55adb0",
