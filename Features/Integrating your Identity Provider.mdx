@@ -28,160 +28,365 @@ The Next Level3 Auth0 integration is designed to be used for any of your existin
 * Next Level3 Company Account
 * Signing Key created for an application in the Next Level3 Company Portal
 
-### Adding  Next  Level3  Custom  Auth0  Action
-The first step to add an NL3 Account Protection Check to an existing application using Auth0 for authentication is to add a custom action which will then be added to your existing login flow.
-### Adding  an  Auth0  Custom  Action
-a. After logging into the Auth0 management portal, navigate to ‘Actions -> Library’ from the main menu and click the “Build Custom” button to build a custom action.
-<img src="/images/auth0/auth0 pic 1.png" />
-b. Enter the following Information (replacing myApplication with the name of your application) in the Custom Action form and click Create.
-* Name – myApplication Account Protection Check
-* Trigger – Login/Post Login
-* Runtime – Node 16 (Recommended)
-<img src="/images/auth0/auth0 pic 2.png" />
-c. In the code editor for the action, remove all the existing default code and replace it with the following NL3 Action code.
+### NL3 Auth0 Action for Performing Account Protection Check
+This integration allows Auth0 customers to integrate a post login action to check the lock status for their users' accounts and block access if locked. This integration requires an active license with Next Level3. Please visit (www.nextlevel3.com)[https://www.nextlevel3.com] for more details on how to sign up for NL3 Account Protection.
+
+#### Steps for configuring as a custom action
+1. Log into manage.auth0.com as a user with permissions to create and modify custom actions
+2. In the left-side menu select Actions > Library
+3. Select the "Build Custom" button in the upper right-hand corner
+4. Give the action a descriptive name in the "Name" field (e.g. NL3 Account Protection Check for MyApp)
+5. Select "Login / Post Login" for "Trigger"
+6. Select "Node 16 (Recommended)" for "Runtime"
+7. Click "Create"
+8. Copy and Paste the code from below into the action (replace any current, default code completely)
 ```javascript
 const https = require('https');
 const nJwt = require('njwt');
 
 function getLockStatus (jwt, api_host, api_path, event) {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     var post_data = JSON.stringify({ "userIP": event.request.ip,
-        "userDevice": event.request.user_agent,
-        "userLocation": event.request.geoip.cityName,
-        "integrationType": "auth0",
-        "integrationData": event.request
-        })
+      "userDevice": event.request.user_agent,
+      "userLocation": event.request.geoip.cityName,
+      "integrationType": "auth0",
+      "integrationData": event.request
+    })
     var options = {
-        host: api_host,
-        port: "443",
-        path: api_path,
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'x-nl3-authorization-token': jwt,
-            'Content-Length': Buffer.byteLength(post_data)
-        }
+      host: api_host,
+      port: "443",
+      path: api_path,
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-nl3-authorization-token': jwt,
+        'x-nl3-device-location': event.request.geoip.latitude + ',' + event.request.geoip.longitude,
+        'x-forwarded-for': event.request.ip,
+        'User-Agent': event.request.user_agent,
+        'Content-Length': Buffer.byteLength(post_data)
+      }
     }
-
+    
     const req = https.request(options, (response) => {
-        let chunks_of_data = [];
+      let chunks_of_data = [];
 
-        response.on('data', (fragments) => {
-            chunks_of_data.push(fragments);
-        });
+      response.on('data', (fragments) => {
+				chunks_of_data.push(fragments);
+			});
 
-        response.on('end', () => {
-            let response_body = Buffer.concat(chunks_of_data);
-            resolve(response_body.toString());
-        });
-        response.on('error', (error) => {
-            console.log("Error = " + error.message);
-            reject(error);
-        });
+      response.on('end', () => {
+				let response_body = Buffer.concat(chunks_of_data);
+        if (response.statusCode == 200) {
+				  resolve(response_body.toString());
+        }
+        else {
+          resolve('{ "statusCode": ' + response.statusCode + '}');
+        }
+			});
+			response.on('error', (error) => {
+        console.log("Error = " + error.message);
+				reject(error);
+			});      
     });
-        req.write(post_data);
-        req.end();
-    });
+    req.write(post_data);
+    req.end();
+  });
 }
 
 exports.onExecutePostLogin = async (event, api) => {
+  var failOpen = event.secrets.FAIL_OPEN == 'true'
+  try {
     if (event.client.client_id==event.secrets.CLIENT_ID) {
-        var claims = {
+      var claims = {
         iss: event.secrets.APP_URI,
         aud: event.secrets.API_HOST,
         sub: event.user.name
-        }
-    let decodedDomainToken = Buffer.from(event.secrets.SIGNING_KEY, 'base64');
-    var jwt = nJwt.create(claims, decodedDomainToken);
-    jwt.setExpiration(new Date().getTime() + (60*5*1000)); //5 minute expiration to allow for SignUp
-    jwt.setNotBefore(new Date().getTime() - (60*1*1000)); //Valid from 1 minute ago to account for minor time diffs
-    var authToken = jwt.compact();
+      }
+      let decodedDomainToken = Buffer.from(event.secrets.SIGNING_KEY, 'base64');
+      var jwt = nJwt.create(claims, decodedDomainToken);
+      jwt.setExpiration(new Date().getTime() + (60*5*1000)); //5 minute expiration to allow for SignUp
+      jwt.setNotBefore(new Date().getTime() - (60*1*1000)); //Valid from 1 minute ago to account for minor time diffs
+      var authToken = jwt.compact();
 
-    if (authToken.length > 0) {
+      if (authToken.length > 0) {
+        console.log(event.secrets.API_HOST + event.secrets.API_PATH)
         const res = await getLockStatus (authToken, event.secrets.API_HOST, event.secrets.API_PATH, event);
-        var result = JSON.parse(res);
+        if(res.indexOf('404') == -1)
+          var result = JSON.parse(res);
+        else
+          console.log(res.toString());
 
-            if(result) {
-                console.log(JSON.stringify(result));
-                if(result.locked) {
-                    api.access.deny(event.secrets.LOCKED_MESSAGE);
-                }
-            } else {
-                //Add logic for violations if required
+        if(result) {
+          if(!result.statusCode) {
+            console.log(JSON.stringify(result));
+            if(result.locked) {
+              api.access.deny(event.secrets.LOCKED_MESSAGE);
             }
+          } else {
+            if (!failOpen) {
+              api.access.deny(event.secrets.LOCKED_MESSAGE);
+            }
+          }
+        } else {
+          if (!failOpen) {
+            api.access.deny(event.secrets.LOCKED_MESSAGE);
+          }
         }
+      }    
     }
+  } catch (err) {
+    if (!failOpen) {
+      api.access.deny(event.secrets.LOCKED_MESSAGE);
+    }
+  }
+
 };
 ```
-Once you have updated the code, click “Save Draft”. After doing this, your action code should look like the following:
+9. Select the icon that looks like a package called "Modules"
+10. Select "Add Module"
+11. In the "Name" textbox type njwt
+12. Click "Create"
+13. Select the icon that looks like a skeleton key called "Secrets"
+14. Add the following secrets:
 
-<img src="/images/auth0/auth0 pic 3.png" />
+| Secret Name | Secret Value (description of value) |
+| ----------- | ----------------------------------- |
+| SIGNING_KEY | The base64 encoded signing key associated with the application you are integrating with from the NL3 company portal (company.nextlevel3.com) |
+| APP_URI | The fully-qualified domain name associated with your application and SIGNING_KEY |
+| CLIENT_ID | The Auth0 Client ID associated with the application you wish to add an NL3 Account Protection Check (This value can be found at manage.auth0.com by selecting Applications > Applications on the left-side menu. It will be in the right-hand column of the list of applications. |
+| API_HOST | The domain name for the NL3 external API (e.g., api.nextlevel3.com - see NL3 product documentation or contact your account representative) |
+| API_PATH | The path to the account protection check API method (e.g.,  /nl3/api/v1/accountProtectionCheck) |
+| LOCKED_MESSAGE | The message to display to the end user if the account is locked (e.g. "Either the username and/or password are incorrect or the user account is locked") |
+| FAIL_OPEN | Set to 'true' without quotes if you want the lock check to fail open, otherwise set it to 'false' without quotes. |
 
-d. Now you need to set up some secrets for the new custom action in order to configure it for your Auth0 protected application. This includes a secret for your NL3 signing key so that the action can check the lock status of users that are set up for Account Protection. You can retrieve your signing key from the [Next Level3 Company Portal](https://company.nextlevel3.com) after you have added the application to the company portal and validated the associated domain for that application. 
+#### Fill in POST data (post_data) with appropriate Auth0 fields in promiseEU function
+Different customers store user data in Auth0 in different fields. You will most likely need to update the event.user. . . properties referenced to the appropriate event.user fields for your configuration (contact support for guidance).
 
-To update secrets, click the ‘Key’ Icon to the left of the code editor called secrets and select the “Add Secret” button   
-          
-<img src="/images/auth0/auth0 pic 4.png" />
+#### Integrate into Actions "Login" Flow
+1. Log into manage.auth0.com as a user with permissions to create and modify action flows
+2. In the left-side menu select "Actions > Flows"
+3. Select "Login" from the tiles under the "Flows" header
+4. In the side panel with the "Add Action" header, select the "Custom" tab
+5. Find the Custom Action you created above and drag it into one of the "Drop Here" boxes that display below the "Start > User Logged In" and "Complete - Token Issued" flow designators when you start to drag over the custom action and make sure when you release it the action remains in the flow
+6. Select "Apply" in the top right to add the action to the flow
 
-e. Enter to following secret key/value pairs one at a time in the ‘Define Secret’ form and click “Create”.
 
-    - Key = LOCKED_MESSAGE
-    - Value = Add a non-descript error message of your choosing such as ‘Login Failed’
+#### Test Integration
+First, enable a user account for this application. Then, attempt to authenticate with the user account locked and then again with the user account unlocked.
 
-    <img src="/images/auth0/auth0 pic 5.png" />
+#### Integration Complete
 
-    - Key = SIGNING_KEY
-    - Value = Paste your domain key provided by the Next Level3 company portal for the domain.
-            
-    - Key = CLIENT_ID
-    - Value = The Auth0 Client ID for your application which can be found under the “Applications” menu in Auth0
-            
-    - Key = API_HOST
-    - Value = Currently, the API host for production endpoints is api.nextlevel3.com
+### NL3 Auth0 Action for Performing Account Protection Check Plus Enable Users
+This integration allows auth0 customers to integrate a post login action to check the lock status for their users' accounts and block access if locked. This integration will aslo create a user in NL3 and enable the auth0 account for locking. NOTE 1: if you use this action DO NOT use the integration above. NOTE 2: this will create a new NL3 user with the same email as the user for the application you add it to. It currently does not support an existing NL3 account, but that could be easily added (please contact support for more info). This integration requires an active license with Next Level3. Please visit www.nextlevel3.com for more details on how to sign up for NL3 Account Protection.
 
-    - Key API_PATH
-    - Value = Currently, the API path for production is /v1/AccountProtectionCheck
+#### Steps for configuring as a custom action
+1. Log into manage.auth0.com as a user with permissions to create and modify custom actions
+2. In the left-side menu select Actions > Library
+3. Select the "Build Custom" button in the upper right-hand corner
+4. Give the action a descriptive name in the "Name" field (e.g. NL3 Account Protection Check and User Enablement)
+5. Select "Login / Post Login" for "Trigger"
+6. Select "Node 16 (Recommended)" for "Runtime"
+7. Click "Create"
+8. Copy and Paste the code from below into the action (replace any current, default code completely)
+```javascript
+const https = require('https');
+const nJwt = require('njwt');
 
-    - Key APP_URI
-    - Value = This must match the value of the Domain URL you configured in the NL3 company portal (e.g. myapp.domain.com)
-f. Next click the package icon labeled “Modules” to add some additional npm modules to the action. The only dependency that is not included by default is “njwt”. Click the ‘Add Dependency’ button, then enter “njwt” into the “Name” field and click the “Create” button. 
+function promiseEU(event, api) {
+  return new Promise((resolve, reject) => {
+    var post_data = JSON.stringify([
+      {
+        "first_name": event.user.user_metadata.first_name,
+        "last_name": event.user.user_metadata.last_name,
+        "email": event.user.email,    
+        "domain": event.secrets.APP_URI,        
+        "phone": String(event.user.user_metadata.phone).replace(" ", "").replace("-", "").replace(".", "").replace("(", "").replace(")", ""),
+        "userAccountId": event.user.email,
+      }
+    ]);
+    var options = {
+      host: event.secrets.API_HOST,
+      port: "443",
+      path: event.secrets.EU_API_PATH,
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-nl3-server-api-token': event.secrets.SDK_API_KEY,
+        'x-nl3-device-location': event.request.geoip.latitude + ',' + event.request.geoip.longitude,
+        'x-forwarded-for': event.request.ip,
+        'User-Agent': event.request.user_agent,
+        'Content-Length': Buffer.byteLength(post_data)
+      }
+    }  
+    const req = https.request(options, (response) => {
+      let chunks_of_data = [];
 
-<img src="/images/auth0/auth0 pic 6.png" />
+      response.on('data', (fragments) => {
+				chunks_of_data.push(fragments);
+			});
 
-g. Next, click “Save Draft” from the code editor window to save the action.
+      response.on('end', () => {
+				let response_body = Buffer.concat(chunks_of_data);
+        if (response.statusCode && response.statusCode >= 200 && response.statusCode < 300) {
+          console.log("200 Status Code");
+          api.user.setUserMetadata("nl3Enabled", true);          
+				  resolve(response_body.toString());
+        }
+        else {
+          resolve('{ "statusCode": ' + response.statusCode + '}');
+        }
+			});
+			response.on('error', (error) => {
+				reject(error);
+			});      
+    });
+    req.write(post_data);
+    req.end();   
+  });
+}
 
-<img src="/images/auth0/auth0 pic 7.png" />
-
-h. Click “Deploy” from the code editor window to deploy the action. After you click “Deploy”, a slider popup will appear letting you know that the action was successfully deployed.
-
-i. Click “Add to Flow” from that slider pop-up.
-
-<Info> If you missed the popup slider,  you can also navigate to “Actions -> Flows” and select the Login tile. </Info>
-            
-<img src="/images/auth0/auth0 pic 8.png" />
-
-j. Click the “Custom” tab to list your custom actions. You should see the NL3 Account Protection action you just created in the list.
-
-<img src="/images/auth0/auth0 pic 9.png" />
-
-k. Drag and drop the NL3 Account Protection action into the flow.
-
-    Your login flow should look similar to this now.
+function getLockStatus (jwt, api_host, api_path, event) {
+  return new Promise((resolve, reject) => {
+    var post_data = JSON.stringify({ "userIP": event.request.ip,
+      "userDevice": event.request.user_agent,
+      "userLocation": event.request.geoip.cityName,
+      "integrationType": "auth0",
+      "integrationData": event.request
+    })
+    var options = {
+      host: api_host,
+      port: "443",
+      path: api_path,
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-nl3-authorization-token': jwt,
+        'x-nl3-device-location': event.request.geoip.latitude + ',' + event.request.geoip.longitude,
+        'x-forwarded-for': event.request.ip,
+        'User-Agent': event.request.user_agent,
+        'Content-Length': Buffer.byteLength(post_data)
+      }
+    }
     
-    <img src="/images/auth0/auth0 pic 10.png" />
-    
-    l. Click “Apply” to apply the flow changes.
+    const req = https.request(options, (response) => {
+      let chunks_of_data = [];
 
-    That’s it. You have now enabled Next Level3 Account Protection. After completing the second phase of integration (User Enablement) and enabling users,  you will be able to test out the lock/unlock capabilities in your site for users that have enabled their accounts for protection.
+      response.on('data', (fragments) => {
+				chunks_of_data.push(fragments);
+			});
 
-    <Tip> If you use IAM Roles and not IAM Users, please contact support to discuss the options for implementation and specific design considerations that may be required to implement this correctly using roles. </Tip>
+      response.on('end', () => {
+				let response_body = Buffer.concat(chunks_of_data);
+        if (response.statusCode == 200) {
+				  resolve(response_body.toString());
+        }
+        else {
+          resolve('{ "statusCode": ' + response.statusCode + ', "statusMessage": ' + response.statusMessage + '}');
+        }
+			});
+			response.on('error', (error) => {
+        console.log("Error = " + error.message);
+				reject(error);
+			});      
+    });
+    req.write(post_data);
+    req.end();
+  });
+}
 
-The next step is to setup the Amazon EventBridge event rule that triggers the Lambda function for specific events. Here is a sample rule:
+exports.onExecutePostLogin = async (event, api) => {
+  var failOpen = event.secrets.FAIL_OPEN == 'true'
+  try {
+    if (event.client.client_id==event.secrets.CLIENT_ID) {
+      if(!event.user.user_metadata.nl3Enabled) {
+        const resEU = await promiseEU(event, api);
+        var resultEU = JSON.parse(resEU);
+        if(resultEU) {
+          if(!resultEU.statusCode) {
+            console.log("Success!");
+          } else {
+            console.log("Status Code = " + resultEU.statusCode + " & Status Message = " + resultEU.statusMessage);
+          }
+        }
+      }
+      var claims = {
+        iss: event.secrets.APP_URI,
+        aud: event.secrets.API_HOST,
+        sub: event.user.name
+      }
+      let decodedDomainToken = Buffer.from(event.secrets.SIGNING_KEY, 'base64');
+      var jwt = nJwt.create(claims, decodedDomainToken);
+      jwt.setExpiration(new Date().getTime() + (60*5*1000)); //5 minute expiration to allow for SignUp
+      jwt.setNotBefore(new Date().getTime() - (60*1*1000)); //Valid from 1 minute ago to account for minor time diffs
+      var authToken = jwt.compact();
 
-Reference:
+      if (authToken.length > 0) {
+        //console.log(event.secrets.API_HOST + event.secrets.API_PATH)
+        const res = await getLockStatus (authToken, event.secrets.API_HOST, event.secrets.API_PATH, event);
 
-[https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-get-started.html)
+        var result = JSON.parse(res);
+
+        if(result) {
+          if(!result.statusCode) {
+            console.log(JSON.stringify(result));
+            if(result.locked) {
+              api.access.deny(event.secrets.LOCKED_MESSAGE);
+            }
+          } else {
+            if (!failOpen) {
+              api.access.deny(event.secrets.LOCKED_MESSAGE);
+            }
+          }
+        } else {
+          if (!failOpen) {
+            api.access.deny(event.secrets.LOCKED_MESSAGE);
+          }
+        }
+      }    
+    }
+  } catch (err) {
+    console.log(err.message);
+    if (!failOpen) {
+      api.access.deny(event.secrets.LOCKED_MESSAGE);
+    }
+  }
+};
+```
+9. Select the icon that looks like a package called "Modules"
+10. Select "Add Module"
+11. In the "Name" textbox type njwt
+12. Click "Create"
+13. Select the icon that looks like a skeleton key called "Secrets"
+14. Add the following secrets:
+
+| Secret Name | Secret Value (description of value) |
+| ----------- | ----------------------------------- |
+| SIGNING_KEY | The base64 encoded signing key associated with the application you are integrating with from the NL3 company portal (company.nextlevel3.com) |
+| APP_URI | The fully-qualified domain name associated with your application and SIGNING_KEY |
+| CLIENT_ID | The Auth0 Client ID associated with the application you wish to add an NL3 Account Protection Check (This value can be found at manage.auth0.com by selecting Applications > Applications on the left-side menu. It will be in the right-hand column of the list of applications. |
+| API_HOST | The domain name for the NL3 external API (e.g., api.nextlevel3.com - see NL3 product documentation or contact your account representative) |
+| API_PATH | The path to the account protection check API method (e.g.,  /nl3/api/v1/accountProtectionCheck) |
+| EU_API_PATH | The path to the account protection check API method (e.g.,  /nl3/api/v1/sdk/importUsers) |
+| SDK_API_KEY | Retrieve SDK API key from company portal under Keys & Tokens in the side menu |
+| LOCKED_MESSAGE | The message to display to the end user if the account is locked (e.g. "Either the username and/or password are incorrect or the user account is locked") |
+| FAIL_OPEN | Set to 'true' without quotes if you want the lock check to fail open, otherwise set it to 'false' without quotes. |
+
+#### Integrate into Actions "Login" Flow
+1. Log into manage.auth0.com as a user with permissions to create and modify action flows
+2. In the left-side menu select "Actions > Flows"
+3. Select "Login" from the tiles under the "Flows" header
+4. In the side panel with the "Add Action" header, select the "Custom" tab
+5. Find the Custom Action you created above and drag it into one of the "Drop Here" boxes that display below the "Start > User Logged In" and "Complete - Token Issued" flow designators when you start to drag over the custom action and make sure when you release it the action remains in the flow
+6. Select "Apply" in the top right to add the action to the flow
+
+
+#### Test Integration
+First, enable a user account for this application. Then, attempt to authenticate with the user account locked and then again with the user account unlocked.
+
+#### Integration Complete
       </Accordion>
       <Accordion title="Microsoft Azure AD B2C" icon="windows">
 ## Microsoft  Azure  AD  B2C  Integration
