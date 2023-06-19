@@ -27,7 +27,9 @@ The Next Level3 Auth0 integration is designed to be used for any of your existin
 * Auth0 Application
 * Next Level3 Company Account
 * Signing Key created for an application in the Next Level3 Company Portal
-
+<Tabs>
+  <Tab
+  title="Account Protection Check">
 ### NL3 Auth0 Action for Performing Account Protection Check
 This integration allows Auth0 customers to integrate a post login action to check the lock status for their users' accounts and block access if locked. This integration requires an active license with Next Level3. Please visit (www.nextlevel3.com)[https://www.nextlevel3.com] for more details on how to sign up for NL3 Account Protection.
 
@@ -175,8 +177,9 @@ Different customers store user data in Auth0 in different fields. You will most 
 #### Test Integration
 First, enable a user account for this application. Then, attempt to authenticate with the user account locked and then again with the user account unlocked.
 
-#### Integration Complete
-
+</Tab>
+<Tab
+title="Account Protection + Enable Users">
 ### NL3 Auth0 Action for Performing Account Protection Check Plus Enable Users
 This integration allows auth0 customers to integrate a post login action to check the lock status for their users' accounts and block access if locked. This integration will aslo create a user in NL3 and enable the auth0 account for locking. NOTE 1: if you use this action DO NOT use the integration above. NOTE 2: this will create a new NL3 user with the same email as the user for the application you add it to. It currently does not support an existing NL3 account, but that could be easily added (please contact support for more info). This integration requires an active license with Next Level3. Please visit www.nextlevel3.com for more details on how to sign up for NL3 Account Protection.
 
@@ -385,8 +388,8 @@ exports.onExecutePostLogin = async (event, api) => {
 
 #### Test Integration
 First, enable a user account for this application. Then, attempt to authenticate with the user account locked and then again with the user account unlocked.
-
-#### Integration Complete
+  </Tab>
+</Tabs>
       </Accordion>
       <Accordion title="Microsoft Azure AD B2C" icon="windows">
 ## Microsoft  Azure  AD  B2C  Integration
