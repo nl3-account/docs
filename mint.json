@@ -13,13 +13,6 @@
   },
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book",
-      "iconType": "duotone",
-      "color": "#4a4ca4",
-      "url": "Introduction"
-    },
-    {
       "icon": "code",
       "name": "API Reference",
       "color": "#4a4ca4",
