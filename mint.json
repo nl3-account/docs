@@ -13,19 +13,17 @@
   },
   "anchors": [
     {
-      "icon": "code",
-      "name": "API Reference",
-      "color": "#4a4ca4",
-      "url": "https://api.nextlevel3.com/nl3/api/swagger-ui/index.html#/"
-    }
-  ],
-  "topAnchor": [
-    {
       "name": "Documentation",
       "icon": "book",
       "iconType": "duotone",
       "color": "#4a4ca4",
       "url": "Introduction"
+    },
+    {
+      "icon": "code",
+      "name": "API Reference",
+      "color": "#4a4ca4",
+      "url": "https://api.nextlevel3.com/nl3/api/swagger-ui/index.html#/"
     }
   ],
   "topbarLinks": [
