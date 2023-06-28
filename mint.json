@@ -13,8 +13,8 @@
   },
   "topAnchor": [
     {
-      "icon": "book",
       "name": "Documentation",
+      "icon": "book",
       "color": "#4a4ca4",
       "url": "Introduction"
     }
