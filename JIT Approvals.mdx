@@ -60,6 +60,7 @@ Currently, there are two approval types support by the Next Level3 Cloud Identit
     Authorization Required for Ticket Purchase
     
     **Approval Data**: 
+        
         Authorization Required: Confirm Purchase
     
         This request came from: steve
@@ -67,11 +68,13 @@ Currently, there are two approval types support by the Next Level3 Cloud Identit
         Hi there! We have received a purchase request for the following item:
 
         Item: Metallica Ticket - 43D 
+        
         Price: $1,654
 
         To authorize this purchase, please sign and click the Approve button below, otherwise, If you did not initiate this purchase or suspect any unauthorized activity, please click on the Reject button.
 
         Thank you for choosing our store!
+        
         www.dev.nl3bank.com
     
      The only value that wasn't added to the metadata field but was called in the Approval Data field was the companyName value which was set to msonline.nextlevel3.com. The reason this value wasn't set as a metadata value is because it was sent in the notification from generating the curl HTTP POST that was used to send the JIT Approval. See below to understand how the curl HTTP POST request works for this approval:
