@@ -1,0 +1,201 @@
+---
+title: 'JIT  Approvals'
+description: 'Creating and Managing your JIT Approvals'
+---
+
+## JIT Approvals
+JIT approvals are used to grant elevated privileges to your users for your applications. This process requires an administrators approval that when approved will provide access to the user in real time. There are a number of use cases in which JIT Approvals provide solutions to solve problems. This document will outline each of the JIT Approval types available to you and will define how to create, use, and manage Next Level3's JIT Approvals within your Company Portal.
+
+### Accessing JIT Approvals
+Requirements: Admin Level Next Level3 Company Account Access.
+
+Login to company.nextlevel3.com and navigate to "Management" -> "JIT Approvals".
+
+## JIT Approval Creation
+### JIT Approval Types
+Currently, there are two approval types support by the Next Level3 Cloud Identity JIT Access platform including;
+- Approve - JIT access approval request that when triggered requires the default approver to approve the request that they received.
+
+- Sign and Approve - JIT access approval request that when triggered required the default approver to sign the request with their signature and then approve the request that is sent.
+
+<Tabs>
+    <Tab title="Approve">
+    ### JIT Approve
+    JIT Approve's are used to approve and reject JIT approval requests. JIT Approval requests will appear in the notifications pane of the default approver when the request is sent. To create a new JIT Approval, click the "+ New Template" button in the JIT Approval Templates pane.
+
+    <img src="/images/JIT/new template.png" />
+
+    This will create a new JIT Approval Template and allow you to specify the following;
+
+    -  Approval Type: Approve
+    -  Template Name: Friendly name for the Approval you are creating
+    -  Approval Title: Friendly title for the the Approval you are creating
+    -  Approval Key: The key name you want your approval to have
+    -  Approval Data: The data contained in the template of the approval you are creating
+    -  Default Approvers: Select the user(s) that will be the default approver user of the approval request that is sent
+    <Tip>The ">" button will add the user that has been selected in the list of default approvers to the default approvers of the template and the ">>" button will add all users to the list of default approvers of the template.
+    The "\<" button will remove any selected default approver that is in the list of approvers for the template and the "\<\<" button will remove all users from the default approvers of the template. </Tip>
+    -  Default Approver Group: Select the group(s) of users that will the default approver group of the approval request that is sent
+    <Tip>The ">" button will add the group that has been selected to the list of default approver groups of the template and the ">>" button will add all groups to the list of default approver groups.
+    The "\<" button will remove the group selected from the default approver groups selected, and the "\<\<" button will remove all groups from the selected default approver groups list. </Tip>
+    -  Metadata - the data specified in the Approval Data section of the new approval template. You can add metadata to your JIT approval template by selecting the "Add Metadata" button below the "Metadata" section of the template.
+    <img src="/images/JIT/add metadata.png" />
+        -  After you have clicked the "Add Metadata" button, the following dialogue box will appear:
+        <img src="/images/JIT/meta data input.png" />
+        **Values**
+        - KEY - The key value of your metadata will be called in the "Approval Data" section of the new template your are creating and is called by using the following format;
+            - Format: $(Key), where "Key" is the name you choose for the metadata Key in the "Add New Metadata" dialogue box.
+        - DEFAULT VALUE - The default value of your metadata item can be specified during its creation, this value will appear in the "Approval Data" section of the approval request where the metadata key is specified.
+    ### EXAMPLE JIT APPROVE APPROVAL TEMPLATE
+    <img src="/images/JIT/example top template.png" />
+    The image above specifies the value required for the JIT Approval template. As you can see in the "Approval Data" section of the template, the metadata is called using $(Key_Name) that is specified in the metadata section in the example below;
+    <img src="/images/JIT/metadata table.png" />
+    ### EXAMPLE JIT APPROVE REQUEST 
+    Once a request is sent it will appear in the default approver's notification pane like the image below
+    <img src="/images/JIT/approval request.png" />
+    As seen in the example above the JIT Approval request contains the following data with the metadata fields that were used in the template created for it:
+    **Approval Title**:Authorization Required for Ticket Purchase
+    **Approval Data**: 
+        Authorization Required: Confirm Purchase
+    
+        This request came from: steve
+
+        Hi there! We have received a purchase request for the following item:
+
+        Item: Metallica Ticket - 43D 
+        Price: $1,654
+
+        To authorize this purchase, please sign and click the Approve button below, otherwise, If you did not initiate this purchase or suspect any unauthorized activity, please click on the Reject button.
+
+        Thank you for choosing our store!
+        www.dev.nl3bank.com
+    
+     The only value that wasn't added to the metadata field but was called in the Approval Data field was the companyName value which was set to msonline.nextlevel3.com. The reason this value wasn't set as a metadata value is because it was sent in the notification from generating the curl HTTP POST that was used to send the JIT Approval. See below to understand how the curl HTTP POST request works for this approval:
+    <Note>cURL (curl) is an open source command-line tool used for transferring data over a network. POST is an HTTP request method which is used to send data to the server. The notification received from the curl POST is an HTTP GET which is a request that is used to receive data from the server.</Note>
+
+```HTTP
+curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
+    -H 'Authority: internal.api.nextlevel3.com' \
+    -H 'Accept: */*' \
+    -H 'Accept-Language: en-US,en;q=0.9' \
+    -H 'Content-Type: application/json' \
+    -H 'Origin: https://cloud.nextlevel3.com' \
+    -H 'Referer: https://cloud.nextlevel3.com/' \
+    -H 'Sec-Ch-Ua: "Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"' \
+    -H 'Sec-Ch-Ua-Mobile: ?0' \
+    -H 'Sec-Ch-Ua-Platform: "macOS"' \
+    -H 'Sec-Fetch-Dest: empty' \
+    -H 'Sec-Fetch-Mode: cors' \
+    -H 'Sec-Fetch-Site: same-site' \
+    -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36' \
+    -H 'X-Nl3-Authorization-Token: accountspecific'  \
+    -H 'X-nl3-device-location: accountspecific' \
+    -d $'{
+        "approvers": ["steve\@nl3.com"],
+        "metaData": {
+            "seatNumber": "43D",
+            "purchaseItem": "Metallica Ticket",
+            "purchasePrice": "$1,654",
+            "requestor" : "kevin"
+        },
+    "templateId": "PURCHASE_APPROVAL"
+}'
+```
+    The values that are sent in the curl HTTP POST for this approval are set in the "approvers", "metadata", and "templateId" fields and match the example in the images above. If an account is associated with a JIT Approval Template and is secured using NL3 JIT Access, then the email(s)/group(s), defined by the "approvers" field, that is/are set for the template, defined by the "templateId",  will need to approve the request before the user is allowed access to completing the task the request sent to gain access for.
+
+    <Info>The approver is not required to add a comment in the comment box, however, they are required to approve the request by tapping the "Approve" option to process the request. If the approver does not want to proceed with the request they can reject it using the "Reject" option. </Info>
+
+    </Tab>
+    
+    <Tab title="Sign and Approve">
+    ### JIT Sign and Approve
+    JIT Sign and Approve's are used to approve and reject JIT approval requests. JIT Approval requests will appear in the notifications pane of the default approver when the request is sent and will required the approver to sign using their keyboard as a digital signature. To create a new JIT Approval, click the "+ New Template" button in the JIT Approval Templates pane.
+
+    <img src="/images/JIT/new template.png" />
+
+    This will create a new JIT Approval Template and allow you to specify the following;
+
+    -  Approval Type: Sign and Approve
+    -  Template Name: Friendly name for the Approval you are creating
+    -  Approval Title: Friendly title for the the Approval you are creating
+    -  Approval Key: The key name you want your approval to have
+    -  Approval Data: The data contained in the template of the approval you are creating
+    -  Default Approvers: Select the user(s) that will be the default approver user of the approval request that is sent
+    <Tip>The ">" button will add the user that has been selected in the list of default approvers to the default approvers of the template and the ">>" button will add all users to the list of default approvers of the template.
+    The "\<" button will remove any selected default approver that is in the list of approvers for the template and the "\<\<" button will remove all users from the default approvers of the template. </Tip>
+    -  Default Approver Group: Select the group(s) of users that will the default approver group of the approval request that is sent
+    <Tip>The ">" button will add the group that has been selected to the list of default approver groups of the template and the ">>" button will add all groups to the list of default approver groups.
+    The "\<" button will remove the group selected from the default approver groups selected, and the "\<\<" button will remove all groups from the selected default approver groups list. </Tip>
+    -  Metadata - the data specified in the Approval Data section of the new approval template. You can add metadata to your JIT approval template by selecting the "Add Metadata" button below the "Metadata" section of the template.
+    <img src="/images/JIT/add metadata.png" />
+        -  After you have clicked the "Add Metadata" button, the following dialogue box will appear:
+        <img src="/images/JIT/meta data input.png" />
+        **Values**
+        - KEY - The key value of your metadata will be called in the "Approval Data" section of the new template your are creating and is called by using the following format;
+            - Format: $(Key), where "Key" is the name you choose for the metadata Key in the "Add New Metadata" dialogue box.
+        - DEFAULT VALUE - The default value of your metadata item can be specified during its creation, this value will appear in the "Approval Data" section of the approval request where the metadata key is specified.
+    ### EXAMPLE JIT SIGN AND APPROVE APPROVAL TEMPLATE
+    <img src="/images/JIT/sign and approve.png" />
+    The image above specifies the value required for the JIT Approval template. As you can see in the "Approval Data" section of the template, the metadata is called using $(Key_Name) that is specified in the metadata section in the example below;
+    <img src="/images/JIT/sign and approve metadata.png" />
+    ### EXAMPLE JIT APPROVE REQUEST 
+    Once a request is sent it will appear in the default approver's notification pane like the image below. 
+    | Top                                                     | Bottom                                                   |
+    | ------------------------------------------------------- | -------------------------------------------------------- |
+    |<img src="/images/JIT/sign and approve approval1.png" /> | <img src="/images/JIT/sign and approve approval1.png" /> |
+    As seen in the example above the JIT Approval request contains the following data with the metadata fields that were used in the template created for it:
+    Approval Title: Authorization Required for Purchase
+    Approval Data: 
+        Authorization Required: Confirm Purchase
+    
+        This request came from: kevin
+
+        Hi there! We have received a purchase request for the following item:
+
+        Item: Metallica Ticket - 43D 
+        Price: $1,654
+
+        To authorize this purchase, please sign and click the Approve button below, otherwise, If you did not initiate this purchase or suspect any unauthorized activity, please click on the Reject button.
+
+        Thank you for choosing our store!
+        msonline.nextlevel3.com
+    
+    The only value that wasn't added to the metadata field but was called in the Approval Data field was the companyName value which was set to msonline.nextlevel3.com. The reason this value wasn't set as a metadata value is because it was sent in the curl HTTP GET notification that was used to receive the JIT Approval Request Notification at the approvers account giving the approver the ability to either approve or reject access to the user requesting JIT access. See below to understand how the curl HTTP POST request works for this approval:
+    <Note>cURL (curl) is an open source command-line tool used for transferring data over a network. POST is an HTTP request method which is used to send data to the server. The notification received from the curl POST is an HTTP GET which is a request that is used to receive data from the server.</Note>
+
+```HTTP
+curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
+    -H 'Authority: internal.api.nextlevel3.com' \
+    -H 'Accept: */*' \
+    -H 'Accept-Language: en-US,en;q=0.9' \
+    -H 'Content-Type: application/json' \
+    -H 'Origin: https://cloud.nextlevel3.com' \
+    -H 'Referer: https://cloud.nextlevel3.com/' \
+    -H 'Sec-Ch-Ua: "Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"' \
+    -H 'Sec-Ch-Ua-Mobile: ?0' \
+    -H 'Sec-Ch-Ua-Platform: "macOS"' \
+    -H 'Sec-Fetch-Dest: empty' \
+    -H 'Sec-Fetch-Mode: cors' \
+    -H 'Sec-Fetch-Site: same-site' \
+    -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36' \
+    -H 'X-Nl3-Authorization-Token: accountspecific'  \
+    -H 'X-nl3-device-location: accountspecific' \
+    -d $'{
+        "approvers": ["kevin\@nextlevel3.com"],
+        "metaData": {
+            "seatNumber": "43D",
+            "purchaseItem": "Metallica Ticket",
+            "purchasePrice": "$1,654",
+            "requestor" : "kevin"
+        },
+    "templateId": "PURCHASE_APPROVAL"
+}'
+```
+    The values that are sent in the curl HTTP POST for this approval are set in the "approvers", "metadata", and "templateId" fields and match the example in the images above. If an account is associated with a JIT Approval Template and is secured using NL3 JIT Access, then the email(s)/group(s), defined by the "approvers" field, that is/are set for the template, defined by the "templateId",  will need to sign and approve the request before the user is allowed access to completing the task the request sent to gain access for.
+
+    <Info>The approver is not required to add a comment in the comment box, however, the signature field, "Sign here" text box, requires the approver to enter their digital signature to process the JIT approval request. Once the approver has entered their digital signature they will need to approve the request by tapping the "Approve" option. If the approver does not want to proceed with the request they can reject it using the "Reject" option. </Info>
+    
+    </Tab>
+</Tabs>
+
+
