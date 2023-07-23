@@ -75,10 +75,13 @@ Currently, there are two approval types support by the Next Level3 Cloud Identit
 
         Thank you for choosing our store!
         
-        www.dev.nl3bank.com
+        \www.dev.nl3bank.com
     
-     The only value that wasn't added to the metadata field but was called in the Approval Data field was the companyName value which was set to msonline.nextlevel3.com. The reason this value wasn't set as a metadata value is because it was sent in the notification from generating the curl HTTP POST that was used to send the JIT Approval. See below to understand how the curl HTTP POST request works for this approval:
-    <Note>cURL (curl) is an open source command-line tool used for transferring data over a network. POST is an HTTP request method which is used to send data to the server. The notification received from the curl POST is an HTTP GET which is a request that is used to receive data from the server.</Note>
+     
+    
+    The only value that wasn't added to the metadata field but was called in the Approval Data field was the companyName value which was set to msonline.nextlevel3.com because that is the name of the company the user registered with. See below to understand how the curl HTTP POST request works for this approval:
+    
+    <Note>cURL (curl) is an open source command-line tool used for transferring data over a network. POST is an HTTP request method which is used to send data to the server.</Note>
 
 ```HTTP
 curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
@@ -151,8 +154,8 @@ curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
     <img src="/images/JIT/sign and approve approval2.png" /> 
     As seen in the example above the JIT Approval request contains the following data with the metadata fields that were used in the template created for it:
     
-    - Approval Title: Authorization Required for Purchase                                                                                                                                                     |
-    - Approval Data:
+    - **Approval Title**: Authorization Required for Purchase                                                                                                                                                     |
+    - **Approval Data**:
     
     Authorization Required: Confirm Purchase
     
@@ -170,8 +173,11 @@ curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
     
     msonline.nextlevel3.com
     
-    The only value that wasn't added to the metadata field but was called in the Approval Data field was the companyName value which was set to msonline.nextlevel3.com. The reason this value wasn't set as a metadata value is because it was sent in the curl HTTP GET notification that was used to receive the JIT Approval Request Notification at the approvers account giving the approver the ability to either approve or reject access to the user requesting JIT access. See below to understand how the curl HTTP POST request works for this approval:
-    <Note>cURL (curl) is an open source command-line tool used for transferring data over a network. POST is an HTTP request method which is used to send data to the server. The notification received from the curl POST is an HTTP GET which is a request that is used to receive data from the server.</Note>
+    
+    
+    The only value that wasn't added to the metadata field but was called in the Approval Data field was the companyName value which was set to msonline.nextlevel3.com because that is the name of the company the user registered with. 
+
+    <Note>cURL (curl) is an open source command-line tool used for transferring data over a network. POST is an HTTP request method which is used to send data to the server.</Note>
 
 ```HTTP
 curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
