@@ -18,8 +18,8 @@ Currently, there are two approval types support by the Next Level3 Cloud Identit
 
 - Sign and Approve - JIT access approval request that when triggered required the default approver to sign the request with their signature and then approve the request that is sent.
 
-<Tabs>
-    <Tab title="Approve">
+<AccordionGroup>
+    <Accordion title="Approve">
     ### JIT Approve
     JIT Approve's are used to approve and reject JIT approval requests. JIT Approval requests will appear in the notifications pane of the default approver when the request is sent. To create a new JIT Approval, click the "+ New Template" button in the JIT Approval Templates pane.
 
@@ -114,10 +114,10 @@ curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
     The values that are sent in the curl HTTP POST for this approval are set in the "approvers", "metadata", and "templateId" fields and match the example in the images above. If an account is associated with a JIT Approval Template and is secured using NL3 JIT Access, then the email(s)/group(s), defined by the "approvers" field, that is/are set for the template, defined by the "templateId",  will need to approve the request before the user is allowed access to completing the task the request sent to gain access for.
 
     <Info>The approver is not required to add a comment in the comment box, however, they are required to approve the request by tapping the "Approve" option to process the request. If the approver does not want to proceed with the request they can reject it using the "Reject" option. </Info>
-
-    </Tab>
+    <Note>For more information on how to generate Authentication Tokens for the integration languages that are supported by NL3, refer to the "Generating Authentication Tokens" section at the end of this page</Note>
+    </Accordion>
     
-    <Tab title="Sign and Approve">
+    <Accordion title="Sign and Approve">
     ### JIT Sign and Approve
     JIT Sign and Approve's are used to approve and reject JIT approval requests. JIT Approval requests will appear in the notifications pane of the default approver when the request is sent and will required the approver to sign using their keyboard as a digital signature. To create a new JIT Approval, click the "+ New Template" button in the JIT Approval Templates pane.
 
@@ -210,8 +210,140 @@ curl -X "POST" "https://api.nextlevel3.com/nl3/api/v1/approvalRequest" \
     The values that are sent in the curl HTTP POST for this approval are set in the "approvers", "metadata", and "templateId" fields and match the example in the images above. If an account is associated with a JIT Approval Template and is secured using NL3 JIT Access, then the email(s)/group(s), defined by the "approvers" field, that is/are set for the template, defined by the "templateId",  will need to sign and approve the request before the user is allowed access to completing the task the request sent to gain access for.
 
     <Info>The approver is not required to add a comment in the comment box, however, the signature field, "Sign here" text box, requires the approver to enter their digital signature to process the JIT approval request. Once the approver has entered their digital signature they will need to approve the request by tapping the "Approve" option. If the approver does not want to proceed with the request they can reject it using the "Reject" option. </Info>
-    
+    <Note>For more information on how to generate Authentication Tokens for the integration languages that are supported by NL3, refer to the "Generating Authentication Tokens" section at the end of this page</Note>
+    </Accordion>
+</AccordionGroup>
+
+## Generating an Authentication Token
+    An authentication token is a method used to verify user identity. Once the token has been verified, the user receives an Access Token which grants the user access to a service that it has been issued for and will work until the token becomes invalid. Next Level3 JIT Approval Authentication uses this process to grant elevated privileges to your users for your applications and supports protecting your applications by integrating Cloud Identity JIT Approvals directly to your applications. Generating the Authentication token required to make calls for your applications depends on the language your application uses. To integrate Next Level3 JIT Approvals into your application using authentication token generation, refer to the corresponding native language your application uses from the list below.
+
+<Tabs>
+    <Tab title="nodeJS">
+ The Next Level3 Node.js integration is designed to be used for your existing applications or sites that are using native Node.js code for authentication. This integration will allow you to easily generate client specific authentication tokens for JIT Approval access to any application that leverages Node.js. 
+        
+        **Pre-requisites**
+
+          * Node.js Application
+          * Next Level3 Company Account
+          * Signing Key created for an application in the Next Level3 Company Portal
+
+        The following Node.js code sample can be used to integrate an authentication token generator into your existing authentication flow for custom Node.js applications that are handling JIT Access calls within the application or where a third-party identity provider does not have a supported integration:
+```Javascript
+const nJwt = require('njwt');
+var claims = {
+  iss: process.env.APP_URI, //URI or FQDN of the site enabled for protection (e.g., FQDN of the site in company.nextlevel3.com for which the SIGNING_KEY is valid)
+  aud: process.env.API_HOST, //URI of NL3 API
+  sub: process.env.USERNAME //Username for application integrated with NL3 (i.e., one being checked for lock status)
+}
+let decodedDomainToken = Buffer.from(process.env.SIGNING_KEY, 'base64'); //SIGNING_KEY is the symmetric key retrieved from company.nextlevel3.com associated with the enabled site
+var jwt = nJwt.create(claims, decodedDomainToken);
+jwt.setExpiration(new Date().getTime() + (60*5*1000)); //5 minute expiration to allow for SignUp
+jwt.setNotBefore(new Date().getTime() - (60*1*1000)); //Valid from 1 minute ago to account for minor time diffs
+jwt.setClaim('otherClaim', claimValue); //Add any custom claims needed for approvals
+var authToken = jwt.compact();
+```
+    </Tab>
+    <Tab title="Python">
+ The Next Level3 Python integration is designed to be used for your existing applications or sites that are using native Python code for authentication. This integration will allow you to easily generate client specific authentication tokens for JIT Approval access to any application that leverages Python. 
+        
+        **Pre-requisites**
+
+          * Python Application
+          * Next Level3 Company Account
+          * Signing Key created for an application in the Next Level3 Company Portal
+
+        The following Python code sample can be used to integrate an authentication token generator into your existing authentication flow for custom Python applications that are handling JIT Access calls within the application or where a third-party identity provider does not have a supported integration:
+```Python
+import jwt
+claims = {
+  "iss": os.environ["APP_URI"], #URI or FQDN of the site enabled for protection (e.g., FQDN of the site in company.nextlevel3.com for which the SIGNING_KEY is valid)
+  "iat": (datetime.utcnow().timestamp() + (-1 * 60)), #5 minute expiration to allow for SignUp
+  "exp": (datetime.utcnow().timestamp() + (5 * 60)), #Valid from 1 minute ago to account for minor time diffs
+  "aud": os.environ["API_URI"], #URI of NL3 API
+  "sub": username, #Username for application integrated with NL3 (i.e., one being checked for lock status)
+  "otherClaim": claimValue #Add any custom claims needed for approvals
+}
+decodedDomainToken = base64.b64decode(os.environ["SIGNING_KEY"]) #SIGNING_KEY is the symmetric key retrieved from company.nextlevel3.com associated with the enabled site
+token = jwt.encode(
+  payload=claims,
+  key=decodedDomainToken
+)
+```
+    </Tab>
+    <Tab title="PHP">
+The Next Level3 PHP integration is designed to be used for your existing applications or sites that are using native PHP code for authentication. This integration will allow you to easily generate client specific authentication tokens for JIT Approval access to any application that leverages PHP. 
+        
+        **Pre-requisites**
+
+          * PHP Application
+          * Next Level3 Company Account
+          * Signing Key created for an application in the Next Level3 Company Portal
+
+        The following PHP code sample can be used to integrate an authentication token generator into your existing authentication flow for custom PHP applications that are handling JIT Access calls within the application or where a third-party identity provider does not have a supported integration:
+```PH
+$issuedAt= time();
+$expire= $issuedAt + 300;
+
+$headerArray = array(
+'typ' => 'JWT',
+'alg' => 'HS256',
+);
+
+$signing_key = base64_decode(trim($_ENV["SIGNING_KEY"]),false); #SIGNING_KEY is the symmetric key retrieved from company.nextlevel3.com associated with the enabled site
+
+$payloadArray = array(
+'iss' => $_ENV["APP_URI"]), #URI or FQDN of the site enabled for protection (e.g., FQDN of the site in company.nextlevel3.com for which the SIGNING_KEY is valid)
+'iat' => $issuedAt,
+'exp' => $expire,
+'aud' => $_ENV["API_URI"]), #URI of NL3 API
+'sub' => $username, #Username for application integrated with NL3 (i.e., one being checked for lock status),
+'otherClaim' => $claimValue #Add any custom claims needed for approvals
+);
+
+$header = json_encode($headerArray, JSON_UNESCAPED_SLASHES);
+$payload = json_encode($payloadArray, JSON_UNESCAPED_SLASHES);
+$base64UrlHeader = base64url_encode($header);
+$base64UrlPayload = base64url_encode($payload);
+
+$signature = hash_hmac('sha256',$base64UrlHeader . "." . $base64UrlPayload,$signing_key,tr
+ue);
+$base64UrlSignature = base64url_encode($signature);
+
+$authToken = $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
+```
+    </Tab>
+    <Tab title="C# .NET">
+The Next Level3 C# .NET integration is designed to be used for your existing applications or sites that are using native C# .NET code for authentication. This integration will allow you to easily generate client specific authentication tokens for JIT Approval access to any application that leverages C# .NET. 
+        
+        **Pre-requisites**
+
+          * C# .NET Application
+          * Next Level3 Company Account
+          * Signing Key created for an application in the Next Level3 Company Portal
+
+        The following C# .NET code sample can be used to integrate an authentication token generator into your existing authentication flow for custom C# .NET applications that are handling JIT Access calls within the application or where a third-party identity provider does not have a supported integration:
+```C#
+using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+
+byte[] key = Convert.FromBase64String(Environment.GetEnvironmentVariable("SIGNING_KEY")); //SIGNING_KEY is the symmetric key retrieved from company.nextlevel3.com associated with the enabled site
+SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
+
+JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+//APP_URI = URI or FQDN of the site enabled for protection (e.g., FQDN of the site in company.nextlevel3.com for which the SIGNING_KEY is valid)
+//API_URI = URI of NL3 API
+//username = Username for application integrated with NL3 (i.e., one being checked for lock status)
+//otherClaim = Add any custom claims needed for approvals 
+JwtSecurityToken token = handler.CreateJwtSecurityToken(Environment.GetEnvironmentVariable("APP_URI"), Environment.GetEnvironmentVariable("API_URI"), new ClaimsIdentity(new[] {
+        new Claim("sub", username), new Claim("otherClaim", claimValue)}), DateTime.UtcNow.AddMinutes(-1), DateTime.UtcNow.AddMinutes(5), DateTime.UtcNow.AddMinutes(-1), new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature));
+// ... handler used to write token when used as string For example:
+request.Headers.Add("x-nl3-authorization-token", handler.WriteToken(token));
+```
     </Tab>
 </Tabs>
+
 
 
