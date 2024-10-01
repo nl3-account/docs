@@ -1,0 +1,130 @@
+---
+title: 'JIT Privileged Access Management'
+description: 'Just In Time Privileged Access Management'
+---
+
+## JIT PAM
+Next Level3's JIT Privileged Access Management provides time-based and approval-based role activation to mitigate the risks of excessive, unnecessary, or misused access permissions on resources. Next Level3's JIT Privileged Access Management is simple yet powerful tool which provides following features:
+- Just In Time approval request on Azure Entra group memebership.
+- Near realtime group memebership after approval.
+- Time based access so group memebership is revoked after expiration.
+- Multifactor authentication to approve request.
+- Group level or default approver setup.
+- Review access request history.
+- Optional AWS instant sync for group memebership.
+
+### Setting up JIT PAM Approval
+Requirements: 
+ - Admin Level Next Level3 Company Account Access.
+ - Azure administration access.
+ - Optional AWS admin access.
+
+#### JIT PAM prerequisite
+<Steps>
+    <Step title="Setup User And Group Sync">
+        ## Setup User and Group sync from Azure to Nextlevel3.
+        - Login to the MS Entra ID Admin Portal as an Administrator.
+        - Click on Identity → Application → Enterprise applications
+         <img src="/images/JIT PAM/ad1.png" />
+        - Click on “New Application”
+        <img src="/images/JIT PAM/ad2.png" />
+        - Click on “Create Your Own Application”
+        <img src="/images/JIT PAM/ad3.png" />
+        - Name Application and keep option 3 on list selected. Click “Create”
+        <img src="/images/JIT PAM/ad4.png" />
+        - Click Manage → Provisioning
+        - Select Provisioning mode to “Automatic”
+        - Fill details as below
+            - tenant url - “https://api.nextlevel3.com/nl3/api/scim/v2/”
+            - Secret Token - Switch to Nextlevel3 company portal and get SDK Api token under "Keys & Tokens" section.
+            <img src="/images/JIT PAM/nl3_key.png" />
+        - Click “Test Connection” and make sure it is successful.
+        <img src="/images/JIT PAM/ad5.png" />
+        - Click Save
+        - Expand “Mappings” Section and select “Provision Microsoft Entra ID Users”
+        - Keep Only below attributes in list and delete others
+            - userName
+            - active
+            - emails[type eq "work"].value
+            - name.givenName
+            - name.familyName
+            - phoneNumbers[type eq "work"].value
+            - externalId
+        - Save
+        - Edit externalId mapping and map it to objectId
+        - Click on “Show advanced options”
+        - Click on “Edit attribute list for customappsso”
+        - At the end of the list, add new attribute with value:
+            - “urn:ietf:params:scim:schemas:extension:NextLevel3ApplicationName:2.0:User:application”
+            - type - String
+        - On attribute mapping page click on Add new mapping and add new option with values
+            - Mapping Type - Constant
+            - Constant Value - your application domain name registred with Nextlevel3
+            - Target Value - “urn:ietf:params:scim:schemas:extension:NextLevel3ApplicationName:2.0:User:application”
+            - Click Save
+        <img src="/images/JIT PAM/ad5.png" />        
+        - Click on Overview of application.
+        - Assign users and groups to application which you want to provision.
+        - Start the sync.
+        - This process will start soon and once completed you can view all synced users and groups in NextLevel3 company portal.
+    </Step>
+    <Step title="Setup Azure Confidential Application Registration">
+        ## Setup Nextlevel3 application in Azure
+
+        - Login to the MS Entra ID Admin Portal as an Administrator.
+        - Add an “App Registration” (Service Principal) in MS Entra ID by logging into the MS Entra ID Admin Portal with permissions to create app registrations and grant consent.
+            - Under “Applications”, click “App Registrations”
+            - Click “New registration” from the buttons on top
+            - Give it a descriptive name (e.g., NL3 JIT Access)
+            - Leave the default “Accounts in this organizational directory only (Next Level3 Software Inc. only - Single tenant)” radio button selected under “Who can use this application or access this API?”
+            - Select “Register”
+        - After registration, go to “API permissions” in the left-hand menu (open the App Registration if not already open)
+        - Click “Add a permission”
+        - Click “Microsoft Graph”
+        - Click “Application permissions”
+        - Search for “GroupMember.ReadWrite.All” and “RoleManagement.ReadWrite.Directory” and select the checkbox next to the permission
+        - Once both are selected, click “Add permission”
+        - On the “API permissions” screen, click the button “Grant admin consent for 'Your Tenant Name'" 
+        - Go to “Certificates & Secrets”
+        - Click on "New client secert"
+        - Securely note down generated client secert, Tenant ID and Client ID.
+    </Step>
+    <Step title="Configure Azure Details In NextLevel3">
+        ## Setup Azure configuration in NextLevel3
+
+        - Login to company.nextlevel3.com and navigate to "Management" -> "Integrations"
+        - Select your registred domain from first dropdown and "Azure Configuration" from second dropdown
+        - Input Azure "Tenant ID", "Client ID" and client secert
+        - Click Save
+    </Step>
+    <Step title="Configure AWS IAM Details In NextLevel3 (Optional)">
+        ## Setup AWS configuration in NextLevel3
+
+        - Login to company.nextlevel3.com and navigate to "Management" -> "Integrations"
+        - Select your registred domain from first dropdown and "Aws Configuration" from second dropdown
+        - Input AWS "Url" and Access Token
+        - Click Save
+    </Step>
+</Steps>
+
+#### JIT PAM approval template
+Login to company.nextlevel3.com and navigate to "Management" -> "JIT Approvals".
+
+- JIT PAM approval template is auto created for each customer. This template has key "GROUP_ACCESS_APPROVAL". If required, template can be customized using edit template page.
+
+- Each sycned group will have "JIT Approvers" configuration. This configuration can be used to delegate approvers for each group. 
+
+- If no approver is configured in requested group then default approvers configured in template will be used for approver.
+
+- Group memebership Expiration has to be passed while requesting approval and can have following values:
+    - 30m
+    - 1hr
+    - 2hr
+    - 6hr
+    - 12hr
+    - 1d
+    - 2d
+
+#### JIT PAM approval request
+
+

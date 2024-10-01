@@ -32,7 +32,7 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["Introduction", "Features/Setting up your Account for Desktop", "Features/Setting up your Account for Mobile", "Features/Securing your Applications", "Features/Setting up End Users",  "Features/Protecting your Endpoints", "Features/Integrating your Identity Provider", "Features/Native Language Integrations", "Features/JIT Policies and Activity Logs", "Features/JIT Approvals"]
+      "pages": ["Introduction", "Features/Setting up your Account for Desktop", "Features/Setting up your Account for Mobile", "Features/Securing your Applications", "Features/Setting up End Users",  "Features/Protecting your Endpoints", "Features/Integrating your Identity Provider", "Features/Native Language Integrations", "Features/JIT Policies and Activity Logs", "Features/JIT Approvals", "Features/JIT Privileged Access Management"]
     }
   ],
   "footerSocials": {
